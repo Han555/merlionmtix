@@ -7,11 +7,14 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import manager.RegisterManager;
+import session.stateless.RegisterSessionLocal;
 
 /**
  *
@@ -19,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Controller", urlPatterns = {"/Controller", "/Controller?*"})
 public class Controller extends HttpServlet {
+    @EJB
+    private RegisterSessionLocal registerSession;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,18 +36,30 @@ public class Controller extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Controller</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Controller at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+        try {
+            RegisterManager registerManager = new RegisterManager(registerSession);
+            
+            String action = request.getParameter("action");
+
+            System.out.println("Action = " + action);
+
+            if (action.equals("register")) {
+                request.getRequestDispatcher("/register.jsp").forward(request, response);
+            } else if (action.equals("doRegistration")) {
+               
+                if(request.getParameter("password").equals(request.getParameter("passwordAgain"))) {
+                    registerManager.register(request.getParameter("userName"), request.getParameter("password"), request.getParameter("mobileNumber"));
+                    request.getRequestDispatcher("/login.jsp").forward(request, response);
+                } else {
+                    request.setAttribute("mismatch", "true");
+                    request.getRequestDispatcher("/register.jsp").forward(request, response);
+                }
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            //request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
 
