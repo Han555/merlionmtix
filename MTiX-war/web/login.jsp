@@ -17,21 +17,21 @@
     </head>
     <body>
         <h1>MTiX Platform</h1>
-        <form action="loggedIn" method="GET">
-            <table>
-                <tr>
-                    <td align="right">Username:</td>
-                    <td align="left"><input type="text" name="name" length="30"/></td>                    
-                </tr>
-                <tr>
-                    <td align="right">Password:</td>
-                    <td align="left"><input type="password" name="password" length="30"/></td>                    
-                </tr>
 
-            </table>
-            <p><input type="submit" value="login"/></p><br><br>
+        <c:url var="formAction" value="/Controller?action=doLogin" />
+        <c:if test="${verification == 'true'}">
+            <font color="red">Account has not been verified!</font><br/>
+        </c:if>
+
+        <form id="loginForm" name="loginForm" action="${formAction}" method="post">
+            Email Username: <input id="userName" name="userName" type="text"/><br/>
+            Password: <input id="password" name="password" type="password"/><br/>
+
+            <c:url var="formAction" value="/Controller" />
+            <input type="submit" value="Log In" /> 
         </form>
-    <c:url var="linkHref" value="/Controller?action=register" />
+            
+        <c:url var="linkHref" value="/Controller?action=register" />
     <li><a href="${linkHref}">Register</a></li>
 </body>
 </html>

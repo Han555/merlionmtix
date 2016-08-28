@@ -6,9 +6,11 @@
 package session.stateless;
 
 import entity.UserEntity;
+import java.util.Vector;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,4 +30,16 @@ public class RegisterSession implements RegisterSessionLocal {
         //entityManager.flush();
     }
 
+    @Override
+    public boolean checkUserConflict(String username) {
+        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " +"'"+ username+"'");
+        
+        if(q.getResultList().isEmpty()) {
+            return false;
+        } else{
+            return true;
+        }
+    }
+    
+    
 }

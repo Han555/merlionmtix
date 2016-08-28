@@ -21,4 +21,8 @@ public class RegisterManager {
     public void register(String username, String password, String mobileNumber) {
         registerSessionLocal.createUser(username, password, mobileNumber);
     }
+    
+    public boolean checkConflict(String username) {
+        return registerSessionLocal.checkUserConflict(username);
+    }
 }

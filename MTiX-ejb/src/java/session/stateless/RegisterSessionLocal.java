@@ -15,5 +15,7 @@ import javax.ejb.Local;
 public interface RegisterSessionLocal {
 
     void createUser(String username, String password, String mobileNumber);
+
+    boolean checkUserConflict(String username);
     
 }

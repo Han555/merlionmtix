@@ -5,6 +5,8 @@
  */
 package session.stateless;
 
+import java.util.List;
+import java.util.Vector;
 import javax.ejb.Local;
 
 /**
@@ -14,6 +16,11 @@ import javax.ejb.Local;
 @Local
 public interface LoginSessionLocal {
 
+    boolean identifyUser(String username, String password);
+
+    boolean checkFirstLogin(String username);
+
+   
    
     
 }

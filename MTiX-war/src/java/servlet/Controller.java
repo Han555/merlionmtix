@@ -13,7 +13,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import manager.LoginManager;
 import manager.RegisterManager;
+import session.stateless.LoginSessionLocal;
 import session.stateless.RegisterSessionLocal;
 
 /**
@@ -22,6 +24,9 @@ import session.stateless.RegisterSessionLocal;
  */
 @WebServlet(name = "Controller", urlPatterns = {"/Controller", "/Controller?*"})
 public class Controller extends HttpServlet {
+
+    @EJB
+    private LoginSessionLocal loginSession;
     @EJB
     private RegisterSessionLocal registerSession;
 
@@ -39,7 +44,8 @@ public class Controller extends HttpServlet {
 
         try {
             RegisterManager registerManager = new RegisterManager(registerSession);
-            
+            LoginManager loginManager = new LoginManager(loginSession);
+
             String action = request.getParameter("action");
 
             System.out.println("Action = " + action);
@@ -47,13 +53,31 @@ public class Controller extends HttpServlet {
             if (action.equals("register")) {
                 request.getRequestDispatcher("/register.jsp").forward(request, response);
             } else if (action.equals("doRegistration")) {
-               
-                if(request.getParameter("password").equals(request.getParameter("passwordAgain"))) {
-                    registerManager.register(request.getParameter("userName"), request.getParameter("password"), request.getParameter("mobileNumber"));
+
+                if (!(registerManager.checkConflict(request.getParameter("userName")))) {
+                    if (request.getParameter("password").equals(request.getParameter("passwordAgain"))) {
+                        registerManager.register(request.getParameter("userName"), request.getParameter("password"), request.getParameter("mobileNumber"));
+                        request.getRequestDispatcher("/login.jsp").forward(request, response);
+                    } else {
+                        request.setAttribute("mismatch", "true");
+                        request.getRequestDispatcher("/register.jsp").forward(request, response);
+                    }
+                } else {
+                    request.setAttribute("conflict", "true");
+                    request.getRequestDispatcher("/register.jsp").forward(request, response);
+                }
+            } else if (action.equals("doLogin")) {
+                System.out.println(request.getParameter("userName") + "      " + request.getParameter("password"));
+                String username = request.getParameter("userName");
+                String password = request.getParameter("password");
+
+                if (loginManager.checkVerification(username)) {
+                    request.setAttribute("verification", "true");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                 } else {
-                    request.setAttribute("mismatch", "true");
-                    request.getRequestDispatcher("/register.jsp").forward(request, response);
+                    if (loginManager.identify(username, password)) {
+                        request.getRequestDispatcher("/home.jsp").forward(request, response);
+                    }
                 }
             }
 

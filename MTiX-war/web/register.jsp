@@ -21,8 +21,11 @@
         <h1>Registration</h1>
 
         <c:url var="formAction" value="/Controller?action=doRegistration" />
+        <c:if test="${conflict == 'true'}">
+            <font color="red">User Email has already been registered!</font><br/>
+        </c:if>
         <c:if test="${mismatch == 'true'}">
-            <font color="red">Password Mismatch</font><br/>
+            <font color="red">Password Mismatch!</font><br/>
         </c:if>
 
         <form id="registerForm" name="registerForm" action="${formAction}" method="post">
