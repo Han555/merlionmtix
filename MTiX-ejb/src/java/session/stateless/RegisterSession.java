@@ -6,7 +6,9 @@
 package session.stateless;
 
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 import javax.ejb.Stateless;
@@ -36,56 +38,85 @@ public class RegisterSession implements RegisterSessionLocal {
 
     @Override
     public boolean checkUserConflict(String username) {
-        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " +"'"+ username+"'");
-        
-        if(q.getResultList().isEmpty()) {
+        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " + "'" + username + "'");
+
+        if (q.getResultList().isEmpty()) {
             return false;
-        } else{
+        } else {
             return true;
         }
     }
 
     @Override
     public int sendMail(String to, String from, String message, String subject, String smtpServ) {
-        try
-        {
+        try {
             Properties props = System.getProperties();
-              // -- Attaching to default Session, or we could start a new one --
-              props.put("mail.transport.protocol", "smtp" );
-              props.put("mail.smtp.starttls.enable","true" );
-              props.put("mail.smtp.host",smtpServ);
-              props.put("mail.smtp.auth", "true" );
-              Authenticator auth = new SMTPAuthenticator();
-              Session session = Session.getInstance(props, auth);
-              // -- Create a new message --
-              Message msg = new MimeMessage(session);
-              // -- Set the FROM and TO fields --
-              msg.setFrom(new InternetAddress(from));
-              msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
-              msg.setSubject(subject);
-              msg.setText(message);
-              // -- Set some other header information --
-              msg.setHeader("MyMail", "Mr. XYZ" );
-              msg.setSentDate(new Date());
-              // -- Send the message --
-              Transport.send(msg);
-              System.out.println("Message sent to"+to+" OK." );
-              return 0;
-        }
-        catch (Exception ex)
-        {
-          ex.printStackTrace();
-          System.out.println("Exception "+ex);
-          return -1;
+            // -- Attaching to default Session, or we could start a new one --
+            props.put("mail.transport.protocol", "smtp");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", smtpServ);
+            props.put("mail.smtp.auth", "true");
+            Authenticator auth = new SMTPAuthenticator();
+            Session session = Session.getInstance(props, auth);
+            // -- Create a new message --
+            Message msg = new MimeMessage(session);
+            // -- Set the FROM and TO fields --
+            msg.setFrom(new InternetAddress(from));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
+            msg.setSubject(subject);
+            msg.setText(message);
+            // -- Set some other header information --
+            msg.setHeader("MyMail", "Mr. XYZ");
+            msg.setSentDate(new Date());
+            // -- Send the message --
+            Transport.send(msg);
+            System.out.println("Message sent to" + to + " OK.");
+            return 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Exception " + ex);
+            return -1;
         }
     }
-    
+
     private class SMTPAuthenticator extends javax.mail.Authenticator {
+
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
-            String username =  "is3102mtix@gmail.com";           // specify your email id here (sender's email id)
+            String username = "is3102mtix@gmail.com";           // specify your email id here (sender's email id)
             String password = "integrated555";                                      // specify your password here
             return new PasswordAuthentication(username, password);
         }
-  }
+    }
+
+    @Override
+    public List<Vector> retrieveUser(String username) {
+        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username=" + "'" + username + "'");
+        List<Vector> users = new ArrayList();
+        for (Object o : q.getResultList()) {
+            UserEntity u = (UserEntity) o;
+
+            Vector im = new Vector();
+            im.add(u.getUsername());
+            im.add(u.getPassword());
+            users.add(im);
+        }
+        return users;
+    }
+
+    @Override
+    public void verifyAccount(String username) {
+        Query query = entityManager.createQuery("UPDATE UserEntity u SET u.firstLogin = 0"  + " WHERE u.username = " + "'" + username + "'");
+        query.executeUpdate();
+    }
+
+    @Override
+    public void changeFirstPassword(String username, String newPassword) {
+        Query query = entityManager.createQuery("UPDATE UserEntity u SET u.password = "  +"'"+newPassword+"'"+ " WHERE u.username = " + "'" + username + "'");
+        query.executeUpdate();
+    }
+
+   
+    
+    
 }

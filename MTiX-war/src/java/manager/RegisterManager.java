@@ -5,6 +5,8 @@
  */
 package manager;
 
+import java.util.List;
+import java.util.Vector;
 import session.stateless.RegisterSessionLocal;
 
 /**
@@ -28,5 +30,26 @@ public class RegisterManager {
     
     public void sendEmail(String to, String from, String message, String subject, String smtpServ) {
         registerSessionLocal.sendMail(to, from, message, subject, smtpServ);
+    }
+    
+    public boolean checkOldPassword(String username, String oldPassword) {
+        List<Vector> user = registerSessionLocal.retrieveUser(username);
+        
+        if(user.isEmpty()) {
+            return false;
+        }
+        if(oldPassword.equals(user.get(0).get(1))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public void verify(String username) {
+        registerSessionLocal.verifyAccount(username);
+    }
+    
+    public void changePassword(String username, String newPassword) {
+        registerSessionLocal.changeFirstPassword(username, newPassword);
     }
 }

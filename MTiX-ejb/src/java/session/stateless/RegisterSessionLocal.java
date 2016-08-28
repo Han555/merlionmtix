@@ -5,6 +5,8 @@
  */
 package session.stateless;
 
+import java.util.List;
+import java.util.Vector;
 import javax.ejb.Local;
 
 /**
@@ -19,5 +21,13 @@ public interface RegisterSessionLocal {
     boolean checkUserConflict(String username);
 
     int sendMail(String to, String from, String message, String subject, String smtpServ);
+
+    List<Vector> retrieveUser(String username);
+
+    void verifyAccount(String username);
+
+    void changeFirstPassword(String username, String newPassword);
+
+  
     
 }

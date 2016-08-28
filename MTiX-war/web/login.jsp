@@ -25,6 +25,9 @@
         <c:if test="${registered == 'true'}">
             <font color="red">Account has been Registered! Please verify it through your email!</font><br/>
         </c:if>
+        <c:if test="${accountverified == 'true'}">
+            <font color="red">Account has been verified!</font><br/>
+        </c:if>
 
         <form id="loginForm" name="loginForm" action="${formAction}" method="post">
             Email Username: <input id="userName" name="userName" type="text"/><br/>

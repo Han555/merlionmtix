@@ -4,6 +4,7 @@
     Author     : Student-ID
 --%>
 
+<%@page import="java.util.Random"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -21,8 +22,10 @@
     <body style="background-color: skyblue">
         <%
             StringBuffer sb = new StringBuffer();
+            char[] chars = "abcdefghijklmnopqrstuvwxyz0123456789/?<>}{.,$#!%&*".toCharArray();
+            Random random = new Random();
             for (int i = 1; i <= 5; i++) {
-                sb.append((char) (int) (Math.random() * 79 + 23 + 7));
+                sb.append(chars[random.nextInt(chars.length)]);
             }
             String cap = new String(sb);
         %>  

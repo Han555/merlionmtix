@@ -29,6 +29,7 @@ public class Controller extends HttpServlet {
     private LoginSessionLocal loginSession;
     @EJB
     private RegisterSessionLocal registerSession;
+    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +44,15 @@ public class Controller extends HttpServlet {
             throws ServletException, IOException {
 
         try {
+            String action;
             RegisterManager registerManager = new RegisterManager(registerSession);
             LoginManager loginManager = new LoginManager(loginSession);
 
-            String action = request.getParameter("action");
+            action = request.getParameter("action");
+            String name = request.getParameter("name");
+            if (name != null) {
+                action = "verify2";
+            }
 
             System.out.println("Action = " + action);
 
@@ -58,6 +64,8 @@ public class Controller extends HttpServlet {
                     if (!(registerManager.checkConflict(request.getParameter("userName")))) {
                         if (request.getParameter("password").equals(request.getParameter("passwordAgain"))) {
                             registerManager.register(request.getParameter("userName"), request.getParameter("password"), request.getParameter("mobileNumber"));
+
+                            registerManager.sendEmail(request.getParameter("userName"), "is3102mtix@gmail.com", "http://localhost:8080/MTiX-war/Controller?" + "name=" + request.getParameter("userName"), "MTiX Account Verification", "smtp.gmail.com");
                             request.setAttribute("registered", "true");
                             request.getRequestDispatcher("/login.jsp").forward(request, response);
                         } else {
@@ -85,6 +93,28 @@ public class Controller extends HttpServlet {
                         request.getRequestDispatcher("/home.jsp").forward(request, response);
                     }
                 }
+            } else if (action.equals("verify")) {
+                System.out.println("userName in verify: " + request.getParameter("userName"));
+                String verifyUser = request.getParameter("userName");
+                
+                if (registerManager.checkOldPassword(request.getParameter("userName"), request.getParameter("oldPass"))) {
+                    if (request.getParameter("newPass").equals(request.getParameter("newPass2"))) {
+                        registerManager.verify(request.getParameter("userName"));
+                        registerManager.changePassword(request.getParameter("userName"), request.getParameter("newPass"));
+                        request.setAttribute("accountverified", "true");
+                        request.getRequestDispatcher("/login.jsp").forward(request, response);
+                    } else {
+                        request.setAttribute("matchpass", "true");
+                        request.setAttribute("verifyUser", verifyUser);
+                        request.getRequestDispatcher("/verification.jsp").forward(request, response);
+                    }
+                } else {
+                    request.setAttribute("oldpass", "true");
+                    request.setAttribute("verifyUser", verifyUser);
+                    request.getRequestDispatcher("/verification.jsp").forward(request, response);
+                }
+            } else if (action.equals("verify2")) {
+                request.getRequestDispatcher("/verification.jsp").forward(request, response);
             }
 
         } catch (Exception ex) {
