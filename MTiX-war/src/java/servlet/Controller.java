@@ -54,16 +54,22 @@ public class Controller extends HttpServlet {
                 request.getRequestDispatcher("/register.jsp").forward(request, response);
             } else if (action.equals("doRegistration")) {
 
-                if (!(registerManager.checkConflict(request.getParameter("userName")))) {
-                    if (request.getParameter("password").equals(request.getParameter("passwordAgain"))) {
-                        registerManager.register(request.getParameter("userName"), request.getParameter("password"), request.getParameter("mobileNumber"));
-                        request.getRequestDispatcher("/login.jsp").forward(request, response);
+                if (request.getParameter("cap1").equals(request.getParameter("cap2"))) {
+                    if (!(registerManager.checkConflict(request.getParameter("userName")))) {
+                        if (request.getParameter("password").equals(request.getParameter("passwordAgain"))) {
+                            registerManager.register(request.getParameter("userName"), request.getParameter("password"), request.getParameter("mobileNumber"));
+                            request.setAttribute("registered", "true");
+                            request.getRequestDispatcher("/login.jsp").forward(request, response);
+                        } else {
+                            request.setAttribute("mismatch", "true");
+                            request.getRequestDispatcher("/register.jsp").forward(request, response);
+                        }
                     } else {
-                        request.setAttribute("mismatch", "true");
+                        request.setAttribute("conflict", "true");
                         request.getRequestDispatcher("/register.jsp").forward(request, response);
                     }
                 } else {
-                    request.setAttribute("conflict", "true");
+                    request.setAttribute("captcha", "true");
                     request.getRequestDispatcher("/register.jsp").forward(request, response);
                 }
             } else if (action.equals("doLogin")) {

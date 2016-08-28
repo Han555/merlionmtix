@@ -25,4 +25,8 @@ public class RegisterManager {
     public boolean checkConflict(String username) {
         return registerSessionLocal.checkUserConflict(username);
     }
+    
+    public void sendEmail(String to, String from, String message, String subject, String smtpServ) {
+        registerSessionLocal.sendMail(to, from, message, subject, smtpServ);
+    }
 }

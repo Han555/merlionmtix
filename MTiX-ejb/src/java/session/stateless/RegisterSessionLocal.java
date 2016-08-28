@@ -17,5 +17,7 @@ public interface RegisterSessionLocal {
     void createUser(String username, String password, String mobileNumber);
 
     boolean checkUserConflict(String username);
+
+    int sendMail(String to, String from, String message, String subject, String smtpServ);
     
 }

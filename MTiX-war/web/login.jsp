@@ -22,6 +22,9 @@
         <c:if test="${verification == 'true'}">
             <font color="red">Account has not been verified!</font><br/>
         </c:if>
+        <c:if test="${registered == 'true'}">
+            <font color="red">Account has been Registered! Please verify it through your email!</font><br/>
+        </c:if>
 
         <form id="loginForm" name="loginForm" action="${formAction}" method="post">
             Email Username: <input id="userName" name="userName" type="text"/><br/>
@@ -30,7 +33,7 @@
             <c:url var="formAction" value="/Controller" />
             <input type="submit" value="Log In" /> 
         </form>
-            
+
         <c:url var="linkHref" value="/Controller?action=register" />
     <li><a href="${linkHref}">Register</a></li>
 </body>
