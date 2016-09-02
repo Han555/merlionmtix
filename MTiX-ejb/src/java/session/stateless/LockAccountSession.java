@@ -87,8 +87,12 @@ public class LockAccountSession implements LockAccountSessionLocal {
             props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.smtp.host", smtpServ);
             props.put("mail.smtp.auth", "true");
+            //new
+            props.put("mail.smtp.debug", "true");
             Authenticator auth = new SMTPAuthenticator();
             Session session = Session.getInstance(props, auth);
+            //new
+            session.setDebug(true);
             // -- Create a new message --
             Message msg = new MimeMessage(session);
             // -- Set the FROM and TO fields --
