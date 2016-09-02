@@ -5,6 +5,7 @@
  */
 package session.stateless;
 
+import entity.AccountLock;
 import entity.UserEntity;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,58 +24,71 @@ import javax.mail.internet.*;
  * @author Student-ID
  */
 @Stateless
-public class RegisterSession implements RegisterSessionLocal {
+public class LockAccountSession implements LockAccountSessionLocal {
 
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public void createUser(String username, String password, String mobileNumber) {
-        UserEntity u = new UserEntity();
-        u.createAccount(username, password, mobileNumber);
-        entityManager.persist(u);
-        //entityManager.flush();
-    }
-
-    @Override
-    public boolean checkUserConflict(String username) {
+    public boolean checkAccount(String username, String password) {
         Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " + "'" + username + "'");
 
         if (q.getResultList().isEmpty()) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
+    }
+
+    @Override
+    public boolean checkLockExistence(String username) {
+        Query q = entityManager.createQuery("SELECT u FROM AccountLock u WHERE u.username = " + "'" + username + "'");
+
+        if (q.getResultList().isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public String RetrieveLockCount(String username) {
+        Query q = entityManager.createQuery("SELECT u FROM AccountLock u WHERE u.username = " + "'" + username + "'");
+        String lockNumber = new String();
+
+        List<Vector> users = new ArrayList();
+        for (Object o : q.getResultList()) {
+            AccountLock u = (AccountLock) o;
+
+            lockNumber = u.getLockNumber();
+        }
+
+        if (q.getResultList().isEmpty()) {
+            return "Account not locked.";
+        }
+
+        return lockNumber;
+    }
+
+    @Override
+    public void updateLockCount(String username, String lockCount) {
+        Query query = entityManager.createQuery("UPDATE AccountLock u SET u.lockNumber = " + "'" + lockCount + "'" + " WHERE u.username = " + "'" + username + "'");
+        query.executeUpdate();
     }
 
     @Override
     public int sendMail(String to, String from, String message, String subject, String smtpServ) {
         try {
             Properties props = System.getProperties();
-            /*
-             Properties props = new Properties();
-             props.put("mail.transport.protocol", "smtp");
-             props.put("mail.smtp.host", "smtp.gmail.com");
-             props.put("mail.smtp.port", "587");
-             props.put("mail.smtp.auth", "true");
-             props.put("mail.smtp.starttls.enable", "true");
-             props.put("mail.smtp.debug", "true");           
-             javax.mail.Authenticator auth = new SMTPAuthenticator();
-             Session session = Session.getInstance(props, auth);
-             session.setDebug(true);           
-             Message msg = new MimeMessage(session);
-             msg.setFrom(InternetAddress.parse("xxx <xxx@gmail.com>", false)[0]);*/
             // -- Attaching to default Session, or we could start a new one --
             props.put("mail.transport.protocol", "smtp");
             props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.smtp.host", smtpServ);
             props.put("mail.smtp.auth", "true");
-            //new
-            props.put("mail.smtp.debug", "true");
             Authenticator auth = new SMTPAuthenticator();
             Session session = Session.getInstance(props, auth);
-            //new
-            session.setDebug(true);
             // -- Create a new message --
             Message msg = new MimeMessage(session);
             // -- Set the FROM and TO fields --
@@ -107,30 +121,15 @@ public class RegisterSession implements RegisterSessionLocal {
     }
 
     @Override
-    public List<Vector> retrieveUser(String username) {
-        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username=" + "'" + username + "'");
-        List<Vector> users = new ArrayList();
-        for (Object o : q.getResultList()) {
-            UserEntity u = (UserEntity) o;
-
-            Vector im = new Vector();
-            im.add(u.getUsername());
-            im.add(u.getPassword());
-            users.add(im);
-        }
-        return users;
+    public void insertLockEntry(String username) {
+        AccountLock a = new AccountLock();
+        a.create(username, "1");
+        entityManager.persist(a);
     }
 
     @Override
-    public void verifyAccount(String username) {
-        Query query = entityManager.createQuery("UPDATE UserEntity u SET u.firstLogin = 0" + " WHERE u.username = " + "'" + username + "'");
-        query.executeUpdate();
-    }
-
-    @Override
-    public void changeFirstPassword(String username, String newPassword) {
-        Query query = entityManager.createQuery("UPDATE UserEntity u SET u.password = " + "'" + newPassword + "'" + " WHERE u.username = " + "'" + username + "'");
-        query.executeUpdate();
+    public void unlockAccount(String username) {
+        entityManager.createQuery("DELETE FROM AccountLock a WHERE a.username = " + "'" + username + "'").executeUpdate();
     }
 
 }

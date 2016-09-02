@@ -13,10 +13,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import manager.LockManager;
 import manager.LoginManager;
 import manager.RegisterManager;
+import manager.UnlockManager;
+import session.stateless.LockAccountSessionLocal;
 import session.stateless.LoginSessionLocal;
 import session.stateless.RegisterSessionLocal;
+import session.stateless.UnlockAccountSessionLocal;
 
 /**
  *
@@ -24,12 +28,16 @@ import session.stateless.RegisterSessionLocal;
  */
 @WebServlet(name = "Controller", urlPatterns = {"/Controller", "/Controller?*"})
 public class Controller extends HttpServlet {
+    @EJB
+    private UnlockAccountSessionLocal unlockAccountSession;
+
+    @EJB
+    private LockAccountSessionLocal lockAccountSession;
 
     @EJB
     private LoginSessionLocal loginSession;
     @EJB
     private RegisterSessionLocal registerSession;
-    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,11 +55,18 @@ public class Controller extends HttpServlet {
             String action;
             RegisterManager registerManager = new RegisterManager(registerSession);
             LoginManager loginManager = new LoginManager(loginSession);
+            LockManager lockManager = new LockManager(lockAccountSession);
+            UnlockManager unlockManager = new UnlockManager(unlockAccountSession);
 
             action = request.getParameter("action");
             String name = request.getParameter("name");
+            System.out.println("here special");
             if (name != null) {
-                action = "verify2";
+                System.out.println("here special 2");
+                if(action == null)  {
+                    System.out.println("here special 3");
+                    action = "verify2";
+                }
             }
 
             System.out.println("Action = " + action);
@@ -86,17 +101,55 @@ public class Controller extends HttpServlet {
                 String password = request.getParameter("password");
 
                 if (loginManager.checkVerification(username)) {
+                    System.out.println("here 1");
                     request.setAttribute("verification", "true");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                 } else {
                     if (loginManager.identify(username, password)) {
-                        request.getRequestDispatcher("/home.jsp").forward(request, response);
+                        System.out.println("here 2");
+                        if(lockManager.passThrough(username)) {
+                            System.out.println("here new 1");
+                            request.getRequestDispatcher("/home.jsp").forward(request, response);
+                        }
+                        if(lockManager.finalLock(username)) {
+                            System.out.println("here 3");
+                            request.setAttribute("locked", "true");
+                            request.setAttribute("account", username);
+                            request.getRequestDispatcher("/login.jsp").forward(request, response);
+                        } else {
+                            System.out.println("here 4");
+                            request.getRequestDispatcher("/home.jsp").forward(request, response);
+                        }
+                    } else if (lockManager.checkLock(username, password)) {
+                        System.out.println("here 5");
+                        if (lockManager.lockAccount(username)) {
+                            System.out.println("here 6");
+                            if (lockManager.finalLock(username)) {
+                                System.out.println("here 7");
+                                request.setAttribute("locked", "true");
+                                request.setAttribute("account", username);
+                                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                            } else {
+                                System.out.println("here 8");
+                                request.setAttribute("halflock", "true");
+                                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                            }
+                        } else {
+                                System.out.println("here 9");
+                                lockManager.insertLock(username);
+                                request.setAttribute("halflock", "true");
+                                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                        }
+                    } else {
+                        System.out.println("here 10");
+                        request.setAttribute("wronguser", "true");
+                        request.getRequestDispatcher("/login.jsp").forward(request, response);
                     }
                 }
             } else if (action.equals("verify")) {
                 System.out.println("userName in verify: " + request.getParameter("userName"));
                 String verifyUser = request.getParameter("userName");
-                
+
                 if (registerManager.checkOldPassword(request.getParameter("userName"), request.getParameter("oldPass"))) {
                     if (request.getParameter("newPass").equals(request.getParameter("newPass2"))) {
                         registerManager.verify(request.getParameter("userName"));
@@ -115,6 +168,16 @@ public class Controller extends HttpServlet {
                 }
             } else if (action.equals("verify2")) {
                 request.getRequestDispatcher("/verification.jsp").forward(request, response);
+            } else if (action.equals("unlock")) {
+                System.out.println("here special 4");
+                request.setAttribute("username", name);
+                request.getRequestDispatcher("/unlockAccount.jsp").forward(request, response);
+            } else if (action.equals("unlocking")) {
+                String username = request.getParameter("userName");
+                System.out.println("unlocking " + username);
+                unlockManager.unlock(username);
+                request.setAttribute("unlock", "true");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
 
         } catch (Exception ex) {
