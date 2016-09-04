@@ -26,9 +26,18 @@ public class UserEntity implements Serializable {
     private String password;
     private String mobileNumber;
     private boolean firstLogin;
+    private boolean resetPassword;
     private ArrayList<String> roles;
 
     public UserEntity() {
+    }
+
+    public boolean isResetPassword() {
+        return resetPassword;
+    }
+
+    public void setResetPassword(boolean resetPassword) {
+        this.resetPassword = resetPassword;
     }
     
     public void createAccount(String username, String password, String mobileNumber) {
@@ -36,6 +45,7 @@ public class UserEntity implements Serializable {
         this.password = password;
         this.mobileNumber = mobileNumber;
         this.firstLogin = true;
+        this.resetPassword = false;
         this.roles = new ArrayList<String>();
     }
 

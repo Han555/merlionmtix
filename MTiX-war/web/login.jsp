@@ -37,10 +37,18 @@
         <c:if test="${locked == 'true'}">
             <font color="red">Account has been locked. Please refer to email to unlock it.</font><br/>
         </c:if>
-            <c:if test="${unlock == 'true'}">
+        <c:if test="${unlock == 'true'}">
             <font color="red">Account has been unlocked. Try resetting password if necessary.</font><br/>
         </c:if>
-        
+        <c:if test="${reset == 'true'}">
+            <font color="red">Account password has been reset. Refer to email sent for new password.</font><br/>
+        </c:if>
+        <c:if test="${lockreset == 'true'}">
+            <font color="red">Password cannot be reset as account has been locked. Refer to email to unlock account first.</font><br/>
+        </c:if>
+        <c:if test="${change == 'true'}">
+            <font color="red">Account password has been reset. Login with new password.</font><br/>
+        </c:if>
 
         <form id="loginForm" name="loginForm" action="${formAction}" method="post">
             Email Username: <input id="userName" name="userName" type="text"/><br/>
@@ -52,5 +60,7 @@
 
         <c:url var="linkHref" value="/Controller?action=register" />
     <li><a href="${linkHref}">Register</a></li>
+        <c:url var="linkHref2" value="/Controller?action=resetPassword" />
+    <li><a href="${linkHref2}">Reset Password</a></li>
 </body>
 </html>

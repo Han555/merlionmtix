@@ -16,10 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import manager.LockManager;
 import manager.LoginManager;
 import manager.RegisterManager;
+import manager.ResetPasswordManager;
 import manager.UnlockManager;
 import session.stateless.LockAccountSessionLocal;
 import session.stateless.LoginSessionLocal;
 import session.stateless.RegisterSessionLocal;
+import session.stateless.ResetPasswordSessionLocal;
 import session.stateless.UnlockAccountSessionLocal;
 
 /**
@@ -28,6 +30,10 @@ import session.stateless.UnlockAccountSessionLocal;
  */
 @WebServlet(name = "Controller", urlPatterns = {"/Controller", "/Controller?*"})
 public class Controller extends HttpServlet {
+
+    @EJB
+    private ResetPasswordSessionLocal resetPasswordSession;
+
     @EJB
     private UnlockAccountSessionLocal unlockAccountSession;
 
@@ -57,13 +63,14 @@ public class Controller extends HttpServlet {
             LoginManager loginManager = new LoginManager(loginSession);
             LockManager lockManager = new LockManager(lockAccountSession);
             UnlockManager unlockManager = new UnlockManager(unlockAccountSession);
+            ResetPasswordManager resetManager = new ResetPasswordManager(resetPasswordSession);
 
             action = request.getParameter("action");
             String name = request.getParameter("name");
             System.out.println("here special");
             if (name != null) {
                 System.out.println("here special 2");
-                if(action == null)  {
+                if (action == null) {
                     System.out.println("here special 3");
                     action = "verify2";
                 }
@@ -107,11 +114,16 @@ public class Controller extends HttpServlet {
                 } else {
                     if (loginManager.identify(username, password)) {
                         System.out.println("here 2");
-                        if(lockManager.passThrough(username)) {
+                        if(resetManager.resetted(username)) {
+                            System.out.println("reset here 1");
+                            request.setAttribute("username", username);
+                            request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
+                        }
+                        if (lockManager.passThrough(username)) {
                             System.out.println("here new 1");
                             request.getRequestDispatcher("/home.jsp").forward(request, response);
                         }
-                        if(lockManager.finalLock(username)) {
+                        if (lockManager.finalLock(username)) {
                             System.out.println("here 3");
                             request.setAttribute("locked", "true");
                             request.setAttribute("account", username);
@@ -135,10 +147,10 @@ public class Controller extends HttpServlet {
                                 request.getRequestDispatcher("/login.jsp").forward(request, response);
                             }
                         } else {
-                                System.out.println("here 9");
-                                lockManager.insertLock(username);
-                                request.setAttribute("halflock", "true");
-                                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                            System.out.println("here 9");
+                            lockManager.insertLock(username);
+                            request.setAttribute("halflock", "true");
+                            request.getRequestDispatcher("/login.jsp").forward(request, response);
                         }
                     } else {
                         System.out.println("here 10");
@@ -178,8 +190,42 @@ public class Controller extends HttpServlet {
                 unlockManager.unlock(username);
                 request.setAttribute("unlock", "true");
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
+            } else if (action.equals("resetPassword")) {
+                System.out.println("reset here 2");
+                request.getRequestDispatcher("/resetPassword.jsp").forward(request, response);
+            } else if (action.equals("sendResetPassword")) {
+                System.out.println("reset here 3");
+                String username = request.getParameter("userName");
+                if (resetManager.checkUserAccount(username)) {
+                    System.out.println("reset here 4");
+                    if (resetManager.checkLockPresence(username)) {
+                        System.out.println("reset here 5");
+                        request.setAttribute("lockreset", "true");
+                        request.getRequestDispatcher("/login.jsp").forward(request, response);
+                    } else {
+                        System.out.println("reset here 6");
+                        resetManager.reset(username);
+                        request.setAttribute("reset", "true");
+                        request.getRequestDispatcher("/login.jsp").forward(request, response);
+                    }
+                } else {
+                    System.out.println("reset here 7");
+                    request.setAttribute("absent", "true");
+                    request.getRequestDispatcher("/resetPassword.jsp").forward(request, response);
+                }
+            } else if (action.equals("change")) {
+                System.out.println("reset here 8");
+                if(!(request.getParameter("newPass").equals(request.getParameter("newPass2")))) {
+                    System.out.println("reset here 9");
+                    request.setAttribute("unmatch", "true");
+                    request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
+                } else {
+                    System.out.println("reset here 10");
+                    resetManager.resetPassword(request.getParameter("userName"), request.getParameter("newPass"));
+                    request.setAttribute("change", "true");
+                    request.getRequestDispatcher("/login.jsp").forward(request, response);
+                }
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
             //request.getRequestDispatcher("/error.jsp").forward(request, response);
