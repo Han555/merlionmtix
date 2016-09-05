@@ -8,11 +8,15 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import manager.LockManager;
 import manager.LoginManager;
 import manager.RegisterManager;
@@ -114,7 +118,7 @@ public class Controller extends HttpServlet {
                 } else {
                     if (loginManager.identify(username, password)) {
                         System.out.println("here 2");
-                        if(resetManager.resetted(username)) {
+                        if (resetManager.resetted(username)) {
                             System.out.println("reset here 1");
                             request.setAttribute("username", username);
                             request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
@@ -215,7 +219,7 @@ public class Controller extends HttpServlet {
                 }
             } else if (action.equals("change")) {
                 System.out.println("reset here 8");
-                if(!(request.getParameter("newPass").equals(request.getParameter("newPass2")))) {
+                if (!(request.getParameter("newPass").equals(request.getParameter("newPass2")))) {
                     System.out.println("reset here 9");
                     request.setAttribute("unmatch", "true");
                     request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
@@ -225,6 +229,14 @@ public class Controller extends HttpServlet {
                     request.setAttribute("change", "true");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                 }
+            } else if (action.equals("login")) {
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+            } else if (action.equals("logout")) {
+                //HttpSession session = request.getSession();
+                // session.invalidate();
+                request.getRequestDispatcher("/logout.jsp").forward(request, response);
+            } else if (action.equals("message")) {
+                request.getRequestDispatcher("/message.jsp").forward(request, response);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -271,4 +283,5 @@ public class Controller extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    
 }

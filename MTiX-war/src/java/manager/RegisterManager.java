@@ -21,7 +21,14 @@ public class RegisterManager {
     }
     
     public void register(String username, String password, String mobileNumber) {
-        registerSessionLocal.createUser(username, password, mobileNumber);
+        String salt;
+        SecurityManager secure = new SecurityManager();
+        byte[] secureSalt = secure.getNextSalt();
+        salt = secure.byteArrayToHexString(secureSalt);
+        String toBeHashed = salt + password;
+        String hashedPassword = secure.doMD5Hashing(toBeHashed);
+        
+        registerSessionLocal.createUser(username, hashedPassword, mobileNumber, salt);
     }
     
     public boolean checkConflict(String username) {
@@ -38,7 +45,10 @@ public class RegisterManager {
         if(user.isEmpty()) {
             return false;
         }
-        if(oldPassword.equals(user.get(0).get(1))) {
+        SecurityManager secure = new SecurityManager();
+        String toBeHashed = (String) (user.get(0).get(2)) + oldPassword;
+        String hashedPassword2 = secure.doMD5Hashing(toBeHashed);
+        if(hashedPassword2.equals(user.get(0).get(1))) {
             return true;
         } else {
             return false;
@@ -50,6 +60,14 @@ public class RegisterManager {
     }
     
     public void changePassword(String username, String newPassword) {
-        registerSessionLocal.changeFirstPassword(username, newPassword);
+        String salt;
+        SecurityManager secure = new SecurityManager();
+        byte[] secureSalt = secure.getNextSalt();
+        salt = secure.byteArrayToHexString(secureSalt);
+        String toBeHashed = salt + newPassword;
+        String hashedPassword = secure.doMD5Hashing(toBeHashed);
+        
+        registerSessionLocal.changeSecureFirstPassword(username, hashedPassword, salt);
     }
+    
 }

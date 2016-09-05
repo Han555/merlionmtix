@@ -13,9 +13,15 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
         <title>MTiX Log In or Register</title>
+        <% response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
+            response.setHeader("Pragma", "no-cache"); //HTTP 1.0 
+            response.setDateHeader("Expires", 0); //prevents caching at the proxy server  
+        %>
     </head>
     <body>
+
         <h1>MTiX Platform</h1>
 
         <c:url var="formAction" value="/Controller?action=doLogin" />
@@ -49,6 +55,9 @@
         <c:if test="${change == 'true'}">
             <font color="red">Account password has been reset. Login with new password.</font><br/>
         </c:if>
+        <c:if test="${error == 'true'}">
+            <font color="red">Session has ended.  Please login.</font><br/>
+        </c:if>
 
         <form id="loginForm" name="loginForm" action="${formAction}" method="post">
             Email Username: <input id="userName" name="userName" type="text"/><br/>
@@ -62,5 +71,7 @@
     <li><a href="${linkHref}">Register</a></li>
         <c:url var="linkHref2" value="/Controller?action=resetPassword" />
     <li><a href="${linkHref2}">Reset Password</a></li>
+
+
 </body>
 </html>

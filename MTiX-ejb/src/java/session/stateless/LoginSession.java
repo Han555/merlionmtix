@@ -6,6 +6,7 @@
 package session.stateless;
 
 import entity.UserEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.ejb.Stateless;
@@ -27,32 +28,57 @@ public class LoginSession implements LoginSessionLocal {
 
     @Override
     public boolean identifyUser(String username, String password) {
-        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " +"'"+ username+"'" + " AND u.password = " +"'"+password+"'");
         
-        if(q.getResultList().isEmpty()) {
+        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " + "'" + username + "'" + " AND u.password = " + "'" + password + "'");
+
+        if (q.getResultList().isEmpty()) {
             return false;
-        } else{
+        } else {
             return true;
         }
     }
 
     @Override
     public boolean checkFirstLogin(String username) {
-        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " +"'"+ username+"'");
-        
-        for(Object o: q.getResultList()) {
+        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " + "'" + username + "'");
+
+        for (Object o : q.getResultList()) {
             UserEntity u = (UserEntity) o;
-            
-            if(u.isFirstLogin()) {
+
+            if (u.isFirstLogin()) {
                 return true;
-            } else{
+            } else {
                 return false;
             }
         }
         return false;
     }
 
-    
+    @Override
+    public boolean checkUser(String username) {
+        Query q1 = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " + "'" + username + "'");
+
+        if (q1.getResultList().isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public List<Vector> retrieveSecureUser(String username) {
+        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username=" + "'" + username + "'");
+        List<Vector> user = new ArrayList();
+        for (Object o : q.getResultList()) {
+            UserEntity u = (UserEntity) o;
+
+            Vector im = new Vector();
+            im.add(u.getSalt());
+            im.add(u.getPassword());
+            user.add(im);
+        }
+        return user;
+    }
     
     
     

@@ -16,7 +16,7 @@ import javax.ejb.Local;
 @Local
 public interface RegisterSessionLocal {
 
-    void createUser(String username, String password, String mobileNumber);
+    
 
     boolean checkUserConflict(String username);
 
@@ -27,6 +27,10 @@ public interface RegisterSessionLocal {
     void verifyAccount(String username);
 
     void changeFirstPassword(String username, String newPassword);
+
+    void createUser(String username, String password, String mobileNumber, String salt);
+
+    void changeSecureFirstPassword(String username, String password, String salt);
 
   
     

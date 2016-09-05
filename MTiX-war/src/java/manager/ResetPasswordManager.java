@@ -33,6 +33,15 @@ public class ResetPasswordManager {
     public void reset(String username) {
         String newPassword = resetPasswordLocal.resetPassword(username);
         
+        String salt;
+        SecurityManager secure = new SecurityManager();
+        byte[] secureSalt = secure.getNextSalt();
+        salt = secure.byteArrayToHexString(secureSalt);
+        String toBeHashed = salt + newPassword;
+        String hashedPassword = secure.doMD5Hashing(toBeHashed);
+        
+        resetPasswordLocal.resetSecure(username, hashedPassword, salt);
+        
         resetPasswordLocal.sendMail(username, "is3102mtix@gmail.com", "New Password: " +newPassword, "MTiX Account Reset Password", "smtp.gmail.com");
         
     }
@@ -42,6 +51,13 @@ public class ResetPasswordManager {
     }
     
     public void resetPassword(String username, String password) {
-        resetPasswordLocal.resetNewPassword(username, password);
+        String salt;
+        SecurityManager secure = new SecurityManager();
+        byte[] secureSalt = secure.getNextSalt();
+        salt = secure.byteArrayToHexString(secureSalt);
+        String toBeHashed = salt + password;
+        String hashedPassword = secure.doMD5Hashing(toBeHashed);
+        
+        resetPasswordLocal.resetNewSecurePassword(username, hashedPassword, salt);
     }
 }

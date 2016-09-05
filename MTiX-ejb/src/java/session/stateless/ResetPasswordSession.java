@@ -115,15 +115,11 @@ public class ResetPasswordSession implements ResetPasswordSessionLocal {
         }
         String newPassword = new String(sb);
 
-        Query q = entityManager.createQuery("UPDATE UserEntity u SET u.password = " + "'" + newPassword + "'" + " WHERE u.username = " + "'" + username + "'");
-        q.executeUpdate();
-
-        Query q2 = entityManager.createQuery("UPDATE UserEntity u SET u.resetPassword = 1" + " WHERE u.username = " + "'" + username + "'");
-        q2.executeUpdate();
-
         return newPassword;
     }
-
+    
+    
+    
     @Override
     public boolean checkLock(String username) {
         Query q = entityManager.createQuery("SELECT a FROM AccountLock a WHERE a.username = " + "'" + username + "'");
@@ -170,6 +166,31 @@ public class ResetPasswordSession implements ResetPasswordSessionLocal {
         Query q2 = entityManager.createQuery("UPDATE UserEntity u SET u.resetPassword = 0" + " WHERE u.username = " + "'" + username + "'");
         q2.executeUpdate();
     }
+
+    @Override
+    public void resetSecure(String username, String password, String salt) {
+         Query q = entityManager.createQuery("UPDATE UserEntity u SET u.password = " + "'" + password + "'" + " WHERE u.username = " + "'" + username + "'");
+        q.executeUpdate();
+
+        Query q2 = entityManager.createQuery("UPDATE UserEntity u SET u.resetPassword = 1" + " WHERE u.username = " + "'" + username + "'");
+        q2.executeUpdate();
+        
+        Query q3 = entityManager.createQuery("UPDATE UserEntity u SET u.salt = " + "'" + salt + "'" + " WHERE u.username = " + "'" + username + "'");
+        q3.executeUpdate();
+    }
+
+    @Override
+    public void resetNewSecurePassword(String username, String password, String salt) {
+        Query q = entityManager.createQuery("UPDATE UserEntity u SET u.password = " + "'" + password + "'" + " WHERE u.username = " + "'" + username + "'");
+        q.executeUpdate();
+
+        Query q2 = entityManager.createQuery("UPDATE UserEntity u SET u.resetPassword = 0" + " WHERE u.username = " + "'" + username + "'");
+        q2.executeUpdate();
+        
+        Query q3 = entityManager.createQuery("UPDATE UserEntity u SET u.salt = " + "'" + salt + "'" + " WHERE u.username = " + "'" + username + "'");
+        q3.executeUpdate();
+    }
+    
     
     
 }

@@ -20,6 +20,10 @@ public interface LoginSessionLocal {
 
     boolean checkFirstLogin(String username);
 
+    boolean checkUser(String username);
+
+    List<Vector> retrieveSecureUser(String username);
+
    
    
     

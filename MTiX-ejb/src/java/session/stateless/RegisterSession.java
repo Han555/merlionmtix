@@ -28,13 +28,7 @@ public class RegisterSession implements RegisterSessionLocal {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    public void createUser(String username, String password, String mobileNumber) {
-        UserEntity u = new UserEntity();
-        u.createAccount(username, password, mobileNumber);
-        entityManager.persist(u);
-        //entityManager.flush();
-    }
+   
 
     @Override
     public boolean checkUserConflict(String username) {
@@ -116,6 +110,7 @@ public class RegisterSession implements RegisterSessionLocal {
             Vector im = new Vector();
             im.add(u.getUsername());
             im.add(u.getPassword());
+            im.add(u.getSalt());
             users.add(im);
         }
         return users;
@@ -131,6 +126,22 @@ public class RegisterSession implements RegisterSessionLocal {
     public void changeFirstPassword(String username, String newPassword) {
         Query query = entityManager.createQuery("UPDATE UserEntity u SET u.password = " + "'" + newPassword + "'" + " WHERE u.username = " + "'" + username + "'");
         query.executeUpdate();
+    }
+
+    @Override
+    public void createUser(String username, String password, String mobileNumber, String salt) {
+        UserEntity u = new UserEntity();
+        u.createAccount(username, password, mobileNumber, salt);
+        entityManager.persist(u);
+    }
+
+    @Override
+    public void changeSecureFirstPassword(String username, String password, String salt) {
+        Query query = entityManager.createQuery("UPDATE UserEntity u SET u.password = " + "'" + password + "'" + " WHERE u.username = " + "'" + username + "'");
+        query.executeUpdate();
+        
+        Query query2 = entityManager.createQuery("UPDATE UserEntity u SET u.salt = " + "'" + salt + "'" + " WHERE u.username = " + "'" + username + "'");
+        query2.executeUpdate();
     }
 
 }

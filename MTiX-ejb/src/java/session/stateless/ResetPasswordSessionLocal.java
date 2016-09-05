@@ -25,5 +25,9 @@ public interface ResetPasswordSessionLocal {
     boolean checkReset(String username);
 
     void resetNewPassword(String username, String password);
+
+    void resetSecure(String username, String password, String salt);
+
+    void resetNewSecurePassword(String username, String password, String salt);
     
 }

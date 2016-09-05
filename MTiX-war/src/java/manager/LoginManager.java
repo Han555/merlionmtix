@@ -5,6 +5,11 @@
  */
 package manager;
 
+import entity.UserEntity;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import javax.persistence.Query;
 import session.stateless.LoginSessionLocal;
 
 /**
@@ -19,7 +24,25 @@ public class LoginManager {
     }
     
     public boolean identify(String username, String password) {
-        return loginSessionLocal.identifyUser(username, password);
+        String salt =""; 
+        String hashedPassword = "";
+        String hashedPassword2 = "";
+
+        if (!(loginSessionLocal.checkUser(username))) {
+            return false;
+        } else {
+            List<Vector> u = loginSessionLocal.retrieveSecureUser(username);
+            
+
+                salt = (String)u.get(0).get(0);
+                hashedPassword = (String) u.get(0).get(1);
+            
+            SecurityManager secure = new SecurityManager();
+            
+            String toBeHashed = salt + password;
+            hashedPassword2 = secure.doMD5Hashing(toBeHashed);
+            return hashedPassword.equals(hashedPassword2);
+        }
     }
     
     public boolean checkVerification(String username) {

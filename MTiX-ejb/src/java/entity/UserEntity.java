@@ -24,12 +24,21 @@ public class UserEntity implements Serializable {
     private Long userId;
     private String username;
     private String password;
+    private String salt;
     private String mobileNumber;
     private boolean firstLogin;
     private boolean resetPassword;
     private ArrayList<String> roles;
 
     public UserEntity() {
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public boolean isResetPassword() {
@@ -40,12 +49,13 @@ public class UserEntity implements Serializable {
         this.resetPassword = resetPassword;
     }
     
-    public void createAccount(String username, String password, String mobileNumber) {
+    public void createAccount(String username, String password, String mobileNumber, String salt) {
         this.username = username;
         this.password = password;
         this.mobileNumber = mobileNumber;
         this.firstLogin = true;
         this.resetPassword = false;
+        this.salt = salt;
         this.roles = new ArrayList<String>();
     }
 
