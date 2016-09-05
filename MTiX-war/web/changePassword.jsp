@@ -9,26 +9,33 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
+<link href="assets/css/style2.css" rel="stylesheet">
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Change Resetted Password</title>
+
     </head>
     <body>
         <c:url var="formAction" value="/Controller?action=change" />
-        <h1>Change Resetted Password</h1>
-        
-        <form id="verifyForm" name="verifyForm" action="${formAction}" method="post">
-            New Password: <input id="password" name="newPass" type="password"/><br/>
-            Verify New Password Again: <input id="password2" name="newPass2" type="password"/><br/>
+        <div class="container">
+            <section id="content">
 
-          
 
-            <input type="hidden" name="userName" value=<%= request.getAttribute("username")%> readonly="readonly" />
-            <c:url var="formAction" value="/Controller" />
-            <input type="submit" value="Change Password" /> 
+                <form id="verifyForm" name="verifyForm" action="${formAction}" method="post">
+                    <h1>Change Resetted Password</h1>
+                    <input id="password" name="newPass" type="password" placeholder="password"/><br/>
+                    <input id="password2" name="newPass2" type="password" placeholder="verify password"/><br/>
 
-        </form>
+
+
+                    <input type="hidden" name="userName" value=<%= request.getAttribute("username")%> readonly="readonly" />
+                    <c:url var="formAction" value="/Controller" />
+                    <input type="submit" value="Change" /> 
+
+                </form>
+            </section>
+        </div>
     </body>
 </html>

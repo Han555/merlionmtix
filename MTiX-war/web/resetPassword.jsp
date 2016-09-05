@@ -9,6 +9,8 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
+<link href="assets/css/style.css" rel="stylesheet">
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,18 +18,24 @@
         <title>Reset Password</title>
     </head>
     <body>
-        <h1>Reset Password</h1>
-        
-        <c:if test="${absent == 'true'}">
-            <font color="red">User account does not exist! Please try again!</font><br/>
-        </c:if>
-        
-        <c:url var="formAction" value="/Controller?action=sendResetPassword" />
-        <form id="resetForm" name="resetForm" action="${formAction}" method="post">
-            Email Username: <input id="userName" name="userName" type="text"/><br/>
 
-            <c:url var="formAction" value="/Controller" />
-            <input type="submit" value="Reset Password" /> 
-        </form>
+        <c:url var="formAction" value="/Controller?action=sendResetPassword" />
+        <div class="container">
+            <section id="content">
+
+
+                <form id="resetForm" name="resetForm" action="${formAction}" method="post">
+                    <h1>Reset Password</h1>
+
+                    <c:if test="${absent == 'true'}">
+                        <font color="red">User account does not exist! Please try again!</font><br/>
+                    </c:if>
+                    <input id="userName" name="userName" type="text" placeholder="Username"/><br/>
+
+                    <c:url var="formAction" value="/Controller" />
+                    <input type="submit" value="Reset" /> 
+                </form>
+            </section>
+        </div>
     </body>
 </html>
