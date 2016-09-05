@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import manager.LockManager;
+import manager.LogManager;
 import manager.LoginManager;
 import manager.RegisterManager;
 import manager.ResetPasswordManager;
@@ -68,6 +69,7 @@ public class Controller extends HttpServlet {
             LockManager lockManager = new LockManager(lockAccountSession);
             UnlockManager unlockManager = new UnlockManager(unlockAccountSession);
             ResetPasswordManager resetManager = new ResetPasswordManager(resetPasswordSession);
+            LogManager logManager = new LogManager();
 
             action = request.getParameter("action");
             String name = request.getParameter("name");
@@ -124,7 +126,8 @@ public class Controller extends HttpServlet {
                             request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
                         }
                         if (lockManager.passThrough(username)) {
-                            System.out.println("here new 1");
+                            System.out.println("here new 1");                           
+                            logManager.logMessage(username + " logged in.");
                             request.getRequestDispatcher("/home.jsp").forward(request, response);
                         }
                         if (lockManager.finalLock(username)) {
@@ -134,6 +137,7 @@ public class Controller extends HttpServlet {
                             request.getRequestDispatcher("/login.jsp").forward(request, response);
                         } else {
                             System.out.println("here 4");
+                            //logManager.logMessage(username + " logged in.");
                             request.getRequestDispatcher("/home.jsp").forward(request, response);
                         }
                     } else if (lockManager.checkLock(username, password)) {
