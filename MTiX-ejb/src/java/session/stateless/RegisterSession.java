@@ -63,6 +63,7 @@ public class RegisterSession implements RegisterSessionLocal {
             props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.smtp.host", smtpServ);
             props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.port", "587");
             //new
             props.put("mail.smtp.debug", "true");
             Authenticator auth = new SMTPAuthenticator();
