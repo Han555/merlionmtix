@@ -9,7 +9,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
-<link href="assets/css/style.css" rel="stylesheet">
+<link href="assets/css/style2.css" rel="stylesheet">
 
 <!DOCTYPE html>
 <html>

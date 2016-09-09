@@ -128,6 +128,7 @@ public class Controller extends HttpServlet {
                         if (lockManager.passThrough(username)) {
                             System.out.println("here new 1");                           
                             logManager.logMessage(username + " logged in.");
+                            request.setAttribute("username", username);
                             request.getRequestDispatcher("/home.jsp").forward(request, response);
                         }
                         if (lockManager.finalLock(username)) {
@@ -241,7 +242,7 @@ public class Controller extends HttpServlet {
                 request.getRequestDispatcher("/logout.jsp").forward(request, response);
             } else if (action.equals("message")) {
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
-            }
+            } 
         } catch (Exception ex) {
             ex.printStackTrace();
             //request.getRequestDispatcher("/error.jsp").forward(request, response);
