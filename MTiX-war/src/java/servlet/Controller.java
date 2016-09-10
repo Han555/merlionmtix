@@ -7,6 +7,7 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,11 +21,13 @@ import javax.servlet.http.HttpSession;
 import manager.LockManager;
 import manager.LogManager;
 import manager.LoginManager;
+import manager.MessageManager;
 import manager.RegisterManager;
 import manager.ResetPasswordManager;
 import manager.UnlockManager;
 import session.stateless.LockAccountSessionLocal;
 import session.stateless.LoginSessionLocal;
+import session.stateless.MessageSessionLocal;
 import session.stateless.RegisterSessionLocal;
 import session.stateless.ResetPasswordSessionLocal;
 import session.stateless.UnlockAccountSessionLocal;
@@ -35,6 +38,9 @@ import session.stateless.UnlockAccountSessionLocal;
  */
 @WebServlet(name = "Controller", urlPatterns = {"/Controller", "/Controller?*"})
 public class Controller extends HttpServlet {
+
+    @EJB
+    private MessageSessionLocal messageSession;
 
     @EJB
     private ResetPasswordSessionLocal resetPasswordSession;
@@ -49,6 +55,8 @@ public class Controller extends HttpServlet {
     private LoginSessionLocal loginSession;
     @EJB
     private RegisterSessionLocal registerSession;
+
+    public String currentUser;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -70,6 +78,7 @@ public class Controller extends HttpServlet {
             UnlockManager unlockManager = new UnlockManager(unlockAccountSession);
             ResetPasswordManager resetManager = new ResetPasswordManager(resetPasswordSession);
             LogManager logManager = new LogManager();
+            MessageManager messageManager = new MessageManager(messageSession);
 
             action = request.getParameter("action");
             String name = request.getParameter("name");
@@ -126,8 +135,9 @@ public class Controller extends HttpServlet {
                             request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
                         }
                         if (lockManager.passThrough(username)) {
-                            System.out.println("here new 1");                           
+                            System.out.println("here new 1");
                             logManager.logMessage(username + " logged in.");
+                            currentUser = username;
                             request.setAttribute("username", username);
                             request.getRequestDispatcher("/home.jsp").forward(request, response);
                         }
@@ -241,8 +251,34 @@ public class Controller extends HttpServlet {
                 // session.invalidate();
                 request.getRequestDispatcher("/logout.jsp").forward(request, response);
             } else if (action.equals("message")) {
+                ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("inbox", inbox);
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
-            } 
+            } else if (action.equals("home")) {
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/message.jsp").forward(request, response);
+            } else if (action.equals("compose")) {
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/compose.jsp").forward(request, response);
+            } else if (action.equals("createMessage")) {
+                System.out.println("Entered message");
+                System.out.println("From: " + currentUser);
+                
+                System.out.println("To: " + request.getParameter("to"));
+                if (messageManager.sendMessage(currentUser, request.getParameter("to"), request.getParameter("subject"), request.getParameter("message"))) {
+                    System.out.println("Entered message 2");
+                    request.setAttribute("sent", "true");
+                    request.getRequestDispatcher("/compose.jsp").forward(request, response);
+                } else {
+                    System.out.println("Entered message 3");
+                    request.setAttribute("missend", "true");
+                    request.getRequestDispatcher("/compose.jsp").forward(request, response);
+                }
+            } else if(action.equals("readMessage")) {
+                System.out.println("Message ID: "+request.getParameter("messageid"));
+                request.getRequestDispatcher("/readMessage.jsp").forward(request, response);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             //request.getRequestDispatcher("/error.jsp").forward(request, response);
@@ -288,5 +324,4 @@ public class Controller extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    
 }
