@@ -42,4 +42,8 @@ public class MessageManager {
         
         return inbox;
     }
+    
+    public ArrayList<String> getMessage(String id) {
+        return messageSessionLocal.retrieveMessage(id);
+    }
 }

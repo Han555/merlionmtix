@@ -133,7 +133,22 @@ public class MessageSession implements MessageSessionLocal {
             return inbox;
         }
 
+    }
+
+    @Override
+    public ArrayList<String> retrieveMessage(String id) {
+        ArrayList<String> message = new ArrayList();
+        Query q = entityManager.createQuery("SELECT m FROM MessageEntity m WHERE m.id = " + id);
+
+        for (Object o : q.getResultList()) {
+            MessageEntity m = (MessageEntity) o;           
+            message.add(m.getSender());
+            message.add(m.getSubject());
+            message.add(m.getContent()); 
+            message.add(Long.toString(m.getId()));
+        }
         
+        return message;
     }
 
 }

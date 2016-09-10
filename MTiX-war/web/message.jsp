@@ -137,6 +137,10 @@
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row">
+                            
+                            <c:if test="${reply == 'true'}">
+                                <font color="red">Reply successfully sent!</font><br/>
+                            </c:if>
 
 
                             <div class="col-md-8">
@@ -153,7 +157,7 @@
 
                                                     <td class="view-message">
                                                         <form id="verifyForm" name="verifyForm" action="${formAction}" method="post">
-                                                            
+
                                                             <input type="hidden" name="messageid" value=<%= ((ArrayList) ((ArrayList) request.getAttribute("inbox")).get(0)).get(0)%> readonly="readonly" />
                                                             <c:url var="formAction" value="/Controller" />
                                                             <input type="submit" value="Read" /> 

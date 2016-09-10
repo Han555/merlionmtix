@@ -57,6 +57,7 @@ public class Controller extends HttpServlet {
     private RegisterSessionLocal registerSession;
 
     public String currentUser;
+    public String subject = "";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -257,14 +258,15 @@ public class Controller extends HttpServlet {
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
             } else if (action.equals("home")) {
                 request.setAttribute("username", currentUser);
-                request.getRequestDispatcher("/message.jsp").forward(request, response);
+                request.getRequestDispatcher("/home.jsp").forward(request, response);
             } else if (action.equals("compose")) {
+                System.out.println("username: " + currentUser);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/compose.jsp").forward(request, response);
             } else if (action.equals("createMessage")) {
                 System.out.println("Entered message");
                 System.out.println("From: " + currentUser);
-                
+
                 System.out.println("To: " + request.getParameter("to"));
                 if (messageManager.sendMessage(currentUser, request.getParameter("to"), request.getParameter("subject"), request.getParameter("message"))) {
                     System.out.println("Entered message 2");
@@ -275,9 +277,25 @@ public class Controller extends HttpServlet {
                     request.setAttribute("missend", "true");
                     request.getRequestDispatcher("/compose.jsp").forward(request, response);
                 }
-            } else if(action.equals("readMessage")) {
-                System.out.println("Message ID: "+request.getParameter("messageid"));
+            } else if (action.equals("readMessage")) {
+                System.out.println("Message ID: " + request.getParameter("messageid"));
+                request.setAttribute("message", messageManager.getMessage(request.getParameter("messageid")));
+                request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/readMessage.jsp").forward(request, response);
+            } else if (action.equals("replyMessage")) {
+                request.setAttribute("receiver", request.getParameter("receiver"));
+                request.setAttribute("username", request.getParameter("username"));
+                subject = "Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1);
+                System.out.println("subject: " +"Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1));
+                request.setAttribute("subject", "Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1));
+                request.getRequestDispatcher("/replyMessage.jsp").forward(request, response);
+            } else if (action.equals("replyResult")) {
+                messageManager.sendMessage(request.getParameter("username"), request.getParameter("receiver"), subject, request.getParameter("reply"));
+                request.setAttribute("reply", "true");
+                ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("inbox", inbox);
+                request.getRequestDispatcher("/message.jsp").forward(request, response);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

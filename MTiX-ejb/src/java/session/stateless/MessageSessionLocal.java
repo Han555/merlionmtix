@@ -22,5 +22,7 @@ public interface MessageSessionLocal {
     void createMessage(String to, String from, String message, String subject);
 
     ArrayList<ArrayList<String>> retrieveInbox(String username);
+
+    ArrayList<String> retrieveMessage(String id);
     
 }
