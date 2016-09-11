@@ -32,6 +32,9 @@
                 <form  id="loginForm" name="loginForm" action="${formAction}" method="post">
                     <h1>MTiX Platform</h1>
 
+                    <c:if test="${role == 'true'}">
+                        <font color="red">Account does not have access rights to system!</font><br/>
+                    </c:if>
                     <c:if test="${verification == 'true'}">
                         <font color="red">Account has not been verified!</font><br/>
                     </c:if>

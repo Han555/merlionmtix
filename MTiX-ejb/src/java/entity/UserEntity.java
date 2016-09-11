@@ -56,7 +56,9 @@ public class UserEntity implements Serializable {
         this.firstLogin = true;
         this.resetPassword = false;
         this.salt = salt;
-        this.roles = new ArrayList<String>();
+        ArrayList<String> roles = new ArrayList();
+        roles.add("customer");
+        this.roles = roles;
     }
 
     public boolean isFirstLogin() {

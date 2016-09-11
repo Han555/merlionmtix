@@ -28,7 +28,7 @@ public class LoginSession implements LoginSessionLocal {
 
     @Override
     public boolean identifyUser(String username, String password) {
-        
+
         Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " + "'" + username + "'" + " AND u.password = " + "'" + password + "'");
 
         if (q.getResultList().isEmpty()) {
@@ -79,7 +79,18 @@ public class LoginSession implements LoginSessionLocal {
         }
         return user;
     }
-    
-    
-    
+
+    @Override
+    public String retrieveRole(String username) {
+        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username=" + "'" + username + "'");
+        String role = "";
+        for (Object o : q.getResultList()) {
+            UserEntity u = (UserEntity) o;
+
+            role = u.getRoles().get(0);
+        }
+        
+        return role;
+    }
+
 }

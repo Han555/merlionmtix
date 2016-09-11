@@ -28,8 +28,6 @@ public class RegisterSession implements RegisterSessionLocal {
     @PersistenceContext
     private EntityManager entityManager;
 
-   
-
     @Override
     public boolean checkUserConflict(String username) {
         Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username = " + "'" + username + "'");
@@ -140,9 +138,25 @@ public class RegisterSession implements RegisterSessionLocal {
     public void changeSecureFirstPassword(String username, String password, String salt) {
         Query query = entityManager.createQuery("UPDATE UserEntity u SET u.password = " + "'" + password + "'" + " WHERE u.username = " + "'" + username + "'");
         query.executeUpdate();
-        
+
         Query query2 = entityManager.createQuery("UPDATE UserEntity u SET u.salt = " + "'" + salt + "'" + " WHERE u.username = " + "'" + username + "'");
         query2.executeUpdate();
+    }
+
+    @Override
+    public void createAdmin() {
+        //u.createAccount("is3102", password, mobileNumber, salt);
+        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username=" + "'" + "is3102mtix@gmail.com" + "'");
+
+        for (Object o : q.getResultList()) {
+            UserEntity u = (UserEntity) o;
+            ArrayList<String> roles = new ArrayList();
+            roles = u.getRoles();
+            roles.add("super administrator");
+            entityManager.persist(u);
+        }
+
+        
     }
 
 }

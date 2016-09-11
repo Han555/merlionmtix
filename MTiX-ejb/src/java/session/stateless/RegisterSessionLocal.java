@@ -32,6 +32,8 @@ public interface RegisterSessionLocal {
 
     void changeSecureFirstPassword(String username, String password, String salt);
 
+    void createAdmin();
+
   
     
 }

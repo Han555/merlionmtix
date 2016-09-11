@@ -136,21 +136,35 @@ public class Controller extends HttpServlet {
                             request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
                         }
                         if (lockManager.passThrough(username)) {
-                            System.out.println("here new 1");
-                            logManager.logMessage(username + " logged in.");
-                            currentUser = username;
-                            request.setAttribute("username", username);
-                            request.getRequestDispatcher("/home.jsp").forward(request, response);
-                        }
-                        if (lockManager.finalLock(username)) {
+                            if (loginManager.getRoles(username).equals("customer")) {
+                                System.out.println("here new 1");
+                                logManager.logMessage(username + " logged in.");
+                                currentUser = username;
+                                request.setAttribute("username", username);
+                                request.getRequestDispatcher("/home.jsp").forward(request, response);
+                            } else {
+                                request.setAttribute("role", "true");
+                                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                            }
+                        } else if (lockManager.finalLock(username)) {
                             System.out.println("here 3");
                             request.setAttribute("locked", "true");
                             request.setAttribute("account", username);
                             request.getRequestDispatcher("/login.jsp").forward(request, response);
                         } else {
                             System.out.println("here 4");
+                            if (loginManager.getRoles(username).equals("customer")) {
+                                System.out.println("here new 1");
+                                logManager.logMessage(username + " logged in.");
+                                currentUser = username;
+                                request.setAttribute("username", username);
+                                request.getRequestDispatcher("/home.jsp").forward(request, response);
+                            } else {
+                                request.setAttribute("role", "true");
+                                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                            }
                             //logManager.logMessage(username + " logged in.");
-                            request.getRequestDispatcher("/home.jsp").forward(request, response);
+                            
                         }
                     } else if (lockManager.checkLock(username, password)) {
                         System.out.println("here 5");
@@ -286,7 +300,7 @@ public class Controller extends HttpServlet {
                 request.setAttribute("receiver", request.getParameter("receiver"));
                 request.setAttribute("username", request.getParameter("username"));
                 subject = "Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1);
-                System.out.println("subject: " +"Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1));
+                System.out.println("subject: " + "Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1));
                 request.setAttribute("subject", "Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1));
                 request.getRequestDispatcher("/replyMessage.jsp").forward(request, response);
             } else if (action.equals("replyResult")) {
@@ -296,6 +310,8 @@ public class Controller extends HttpServlet {
                 request.setAttribute("username", currentUser);
                 request.setAttribute("inbox", inbox);
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
+            } else if (action.equals("buyTickets")) {
+                registerManager.createAdministrator();
             }
         } catch (Exception ex) {
             ex.printStackTrace();

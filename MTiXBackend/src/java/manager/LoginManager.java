@@ -48,4 +48,8 @@ public class LoginManager {
     public boolean checkVerification(String username) {
         return loginSessionLocal.checkFirstLogin(username);
     }
+    
+    public String getRoles(String username) {
+        return loginSessionLocal.retrieveRole(username);
+    }
 }

@@ -24,6 +24,8 @@ public interface LoginSessionLocal {
 
     List<Vector> retrieveSecureUser(String username);
 
+    String retrieveRole(String username);
+
    
    
     
