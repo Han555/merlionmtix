@@ -152,6 +152,7 @@ public class RegisterSession implements RegisterSessionLocal {
             UserEntity u = (UserEntity) o;
             ArrayList<String> roles = new ArrayList();
             roles = u.getRoles();
+            roles.remove(0);
             roles.add("super administrator");
             entityManager.persist(u);
         }
