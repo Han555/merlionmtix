@@ -34,6 +34,8 @@ public interface RegisterSessionLocal {
 
     void createAdmin();
 
+    void adminCreateUser(String username, String password, String mobileNumber, String salt, String role);
+
   
     
 }
