@@ -152,11 +152,31 @@ public class RegisterSession implements RegisterSessionLocal {
             UserEntity u = (UserEntity) o;
             ArrayList<String> roles = new ArrayList();
             roles = u.getRoles();
+            roles.remove(0);
             roles.add("super administrator");
             entityManager.persist(u);
         }
 
-        
+    }
+
+    @Override
+    public void adminCreateUser(String username, String password, String mobileNumber, String salt, String role) {
+        UserEntity u = new UserEntity();
+        System.out.println("admin creating 1");
+        u.createAccount(username, password, mobileNumber, salt);
+        entityManager.persist(u);
+        System.out.println("admin creating 2");
+        Query q = entityManager.createQuery("SELECT u FROM UserEntity u WHERE u.username=" + "'" + username + "'");
+        System.out.println("admin creating 3");
+        for (Object o : q.getResultList()) {
+            System.out.println("admin creating 4");
+            UserEntity u2 = (UserEntity) o;
+            ArrayList<String> roles = new ArrayList();
+            roles = u2.getRoles();
+            roles.remove(0);
+            roles.add(role);
+            entityManager.persist(u);
+        }
     }
 
 }

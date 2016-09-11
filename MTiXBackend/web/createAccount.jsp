@@ -1,6 +1,6 @@
 <%-- 
-    Document   : home
-    Created on : Sep 10, 2016, 11:46:10 PM
+    Document   : createAccount
+    Created on : Sep 11, 2016, 2:53:12 PM
     Author     : Student-ID
 --%>
 
@@ -16,7 +16,7 @@
         <link rel="icon" type="image/png" href="assets/img/favicon.ico">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-        <title>MTiX Backend Home Page</title>
+        <title>Create Account</title>
 
         <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
         <meta name="viewport" content="width=device-width" />
@@ -43,6 +43,7 @@
 
     </head>
     <body>
+        <c:url var="formAction" value="/BackController?action=creating" />
 
         <div class="wrapper">
             <div class="sidebar" data-color="orange" data-image="assets/img/sidebar-5.jpg">
@@ -68,13 +69,7 @@
                                 <p>User Profile</p>
                             </a>
                         </li>
-                        <li>
-                            <c:url var="linkHref" value="/BackController?action=createAccount" />
-                            <a  href="${linkHref}">
-                                <i class="pe-7s-user"></i>
-                                <p>Create Account</p>
-                            </a>
-                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -89,7 +84,9 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" href="#">MTiX Backend</a>
+
+                            <c:url var="linkHref" value="/BackController?action=home" />
+                            <a  class="navbar-brand" href="${linkHref}">Home</a>
                         </div>
                         <div class="collapse navbar-collapse">
 
@@ -110,41 +107,38 @@
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="header">
-                                        <c:url var="linkHref" value="/Controller?action=message" />
-                                        <a class="title" href="${linkHref}">Messages</a>
 
-                                    </div>
-                                    <div class="content">
-                                        <div><img src="assets/img/faces/mail-box.jpg" /></div>
-
-                                        <div class="footer">
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-clock-o"></i> Inbox updated
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <c:if test="${created == 'true'}">
+                                <font color="red">Account successfully created!</font><br/>
+                            </c:if>
+                            <c:if test="${conflict == 'true'}">
+                                <font color="red">Account has already been created!</font><br/>
+                            </c:if>
 
                             <div class="col-md-8">
                                 <div class="card">
                                     <div class="header">
-                                        <c:url var="linkHref" value="/Controller?action=YourAction" />
-                                        <a class="title" href="${linkHref}">Property Management</a>
+                                        <p>Create Account</p>
                                     </div>
                                     <div class="content">
-                                        <div><img src="assets/img/faces/propertymanagement.jpg" /></div>
-                                        <div class="footer">
-
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-history"></i> Updated 3 minutes ago
+                                        <form id="contact_form" action="${formAction}" method="POST">
+                                            <div class="row">
+                                                <label for="name">Username:</label><br />
+                                                <input id="to" class="input" name="username" type="text" value="" size="30" /><br />
                                             </div>
-                                        </div>
+                                            <div class="row">
+                                                <label for="email">Role:</label><br />
+                                                <input id="subject" class="input" name="role" type="text" value="" size="30" /><br />
+                                            </div>
+                                            <div class="row">
+                                                <label for="email">Mobile Number:</label><br />
+                                                <input id="subject" class="input" name="mobileNumber" type="text" value="" size="30" /><br />
+                                            </div>
+                                            <input type="hidden" name="username" value=<%= request.getAttribute("username")%> readonly="readonly" />
+                                            <br>
+                                            <c:url var="formAction" value="/BackController" />
+                                            <input type="submit" value="Create Account" />
+                                        </form>	
                                     </div>
                                 </div>
                             </div>
@@ -152,50 +146,7 @@
 
 
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card ">
-                                    <div class="header">
-                                        <c:url var="linkHref" value="/BackController?action=YourAction" />
-                                        <a class="title" href="${linkHref}">Product Management</a>
-                                    </div>
-                                    <div class="content">
-                                        <div><img src="assets/img/faces/productmanagement.jpg" /></div>
 
-                                        <div class="footer">
-
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-check"></i> System updated
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="card ">
-                                    <div class="header">
-                                        <c:url var="linkHref" value="/Controller?action=message" />
-                                        <a class="title" href="${linkHref}">My Finances</a>
-                                    </div>
-
-                                    <div class="content">
-                                        <div><img src="assets/img/faces/myfinances.jpg" /></div>
-
-
-                                    </div>
-
-
-                                    <div class="footer">
-                                        <hr>
-                                        <div class="stats">
-                                            <i class="fa fa-history"></i> Credit card information entered
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

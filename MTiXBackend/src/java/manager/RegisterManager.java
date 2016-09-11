@@ -6,6 +6,7 @@
 package manager;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 import session.stateless.RegisterSessionLocal;
 
@@ -73,4 +74,32 @@ public class RegisterManager {
     public void createAdministrator() {
         registerSessionLocal.createAdmin();
     }
+    
+    public String resetPassword(String username) {
+        StringBuffer sb = new StringBuffer();
+        char[] chars = "abcdefghijklmnopqrstuvwxyz0123456789/?<>}{.,$#!%&*".toCharArray();
+        Random random = new Random();
+        for (int i = 1; i <= 8; i++) {
+            sb.append(chars[random.nextInt(chars.length)]);
+        }
+        String newPassword = new String(sb);
+
+        return newPassword;
+    }
+    
+    public void adminCreate(String username, String role, String mobileNumber) {
+        String password = resetPassword(username);
+        
+        registerSessionLocal.sendMail(username, "is3012mtix@gmail.com", "http://localhost:8080/MTiXBackend/BackController?" + "name=" + username+"     username: "+username+"    password: "+password, "MTiX backend account created", "smtp.gmail.com");
+        
+        String salt;
+        SecurityManager secure = new SecurityManager();
+        byte[] secureSalt = secure.getNextSalt();
+        salt = secure.byteArrayToHexString(secureSalt);
+        String toBeHashed = salt + password;
+        String hashedPassword = secure.doMD5Hashing(toBeHashed);
+        registerSessionLocal.adminCreateUser(username, hashedPassword, mobileNumber, salt, role);
+    }
+    
+    
 }

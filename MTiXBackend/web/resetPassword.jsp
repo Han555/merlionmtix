@@ -32,7 +32,7 @@
                     </c:if>
                     <input id="userName" name="userName" type="text" placeholder="Username"/><br/>
 
-                    <c:url var="formAction" value="/Controller" />
+                    <c:url var="formAction" value="/BackController" />
                     <input type="submit" value="Reset" /> 
                 </form>
             </section>
