@@ -7,20 +7,25 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import manager.BulletinManager;
 import manager.LockManager;
 import manager.LogManager;
 import manager.LoginManager;
+import manager.MessageManager;
 import manager.RegisterManager;
 import manager.ResetPasswordManager;
 import manager.UnlockManager;
+import session.stateless.BulletinSessionLocal;
 import session.stateless.LockAccountSessionLocal;
 import session.stateless.LoginSessionLocal;
+import session.stateless.MessageSessionLocal;
 import session.stateless.RegisterSessionLocal;
 import session.stateless.ResetPasswordSessionLocal;
 import session.stateless.UnlockAccountSessionLocal;
@@ -31,6 +36,10 @@ import session.stateless.UnlockAccountSessionLocal;
  */
 @WebServlet(name = "BackController", urlPatterns = {"/BackController", "/BackController?*"})
 public class BackController extends HttpServlet {
+    @EJB
+    private BulletinSessionLocal bulletinSession;
+    @EJB
+    private MessageSessionLocal messageSession;
 
     @EJB
     private RegisterSessionLocal registerSession;
@@ -42,8 +51,10 @@ public class BackController extends HttpServlet {
     private LockAccountSessionLocal lockAccountSession;
     @EJB
     private LoginSessionLocal loginSession;
+    
 
     public String currentUser;
+    public String subject = "";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -65,6 +76,8 @@ public class BackController extends HttpServlet {
             LogManager logManager = new LogManager();
             UnlockManager unlockManager = new UnlockManager(unlockAccountSession);
             RegisterManager registerManager = new RegisterManager(registerSession);
+            MessageManager messageManager = new MessageManager(messageSession);
+            BulletinManager bulletinManager = new BulletinManager(bulletinSession);
 
             String action;
             action = request.getParameter("action");
@@ -239,6 +252,48 @@ public class BackController extends HttpServlet {
                     request.setAttribute("change", "true");
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                 }
+            } else if (action.equals("message")) {
+                ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("inbox", inbox);
+                request.getRequestDispatcher("/message.jsp").forward(request, response);
+            } else if (action.equals("compose")) {
+                System.out.println("username: " + currentUser);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/compose.jsp").forward(request, response);
+            } else if (action.equals("createMessage")) {
+                System.out.println("Entered message");
+                System.out.println("From: " + currentUser);
+
+                System.out.println("To: " + request.getParameter("to"));
+                if (messageManager.sendMessage(currentUser, request.getParameter("to"), request.getParameter("subject"), request.getParameter("message"))) {
+                    System.out.println("Entered message 2");
+                    request.setAttribute("sent", "true");
+                    request.getRequestDispatcher("/compose.jsp").forward(request, response);
+                } else {
+                    System.out.println("Entered message 3");
+                    request.setAttribute("missend", "true");
+                    request.getRequestDispatcher("/compose.jsp").forward(request, response);
+                }
+            } else if (action.equals("readMessage")) {
+                System.out.println("Message ID: " + request.getParameter("messageid"));
+                request.setAttribute("message", messageManager.getMessage(request.getParameter("messageid")));
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/readMessage.jsp").forward(request, response);
+            } else if (action.equals("replyMessage")) {
+                request.setAttribute("receiver", request.getParameter("receiver"));
+                request.setAttribute("username", request.getParameter("username"));
+                subject = "Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1);
+                System.out.println("subject: " + "Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1));
+                request.setAttribute("subject", "Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1));
+                request.getRequestDispatcher("/replyMessage.jsp").forward(request, response);
+            } else if (action.equals("replyResult")) {
+                messageManager.sendMessage(request.getParameter("username"), request.getParameter("receiver"), subject, request.getParameter("reply"));
+                request.setAttribute("reply", "true");
+                ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("inbox", inbox);
+                request.getRequestDispatcher("/message.jsp").forward(request, response);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
