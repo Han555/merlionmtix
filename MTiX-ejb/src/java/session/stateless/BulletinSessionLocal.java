@@ -5,6 +5,7 @@
  */
 package session.stateless;
 
+import java.util.ArrayList;
 import javax.ejb.Local;
 
 /**
@@ -14,6 +15,10 @@ import javax.ejb.Local;
 @Local
 public interface BulletinSessionLocal {
 
-    void broadcast(String message);
-    
+    void broadcast(String message, String subject);
+
+    ArrayList<ArrayList<String>> retrieveBulletin();
+
+    ArrayList<String> getMessage(String id);
+
 }

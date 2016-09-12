@@ -1,6 +1,6 @@
 <%-- 
-    Document   : message
-    Created on : Sep 4, 2016, 5:36:06 PM
+    Document   : bulletinBoard
+    Created on : Sep 12, 2016, 12:41:38 PM
     Author     : Student-ID
 --%>
 
@@ -17,7 +17,7 @@
         <link rel="icon" type="image/png" href="assets/img/favicon.ico">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-        <title>Messages</title>
+        <title>Bulletin Board</title>
 
         <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
         <meta name="viewport" content="width=device-width" />
@@ -46,7 +46,7 @@
 
     </head>
     <body>
-        <c:url var="formAction" value="/BackController?action=readMessage" />
+        <c:url var="formAction" value="/BackController?action=readBulletin" />
 
 
         <div class="wrapper">
@@ -119,17 +119,12 @@
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <c:url var="linkHref" value="/BackController?action=compose" />
+                                    <c:url var="linkHref" value="/BackController?action=composeBulletin" />
                                     <a href="${linkHref}">
-                                        New
+                                        New Bulletin
                                     </a>
                                 </li>
-                                <li>
-                                    <c:url var="linkHref" value="/BackController?action=bulletinBoard" />
-                                    <a href="${linkHref}">
-                                        Bulletin Board
-                                    </a>
-                                </li>
+                            
                                 <li>
                                     <a href="#">
                                         Log out
@@ -145,16 +140,16 @@
                     <div class="container-fluid">
                         <div class="row">
 
-                            <c:if test="${reply == 'true'}">
-                                <font color="red">Reply successfully sent!</font><br/>
+                           
+                            <c:if test="${created == 'true'}">
+                                <font color="red">Bulletin message successfully broadcast!</font><br/>
                             </c:if>
-                            
 
 
                             <div class="col-md-8">
                                 <div class="card">
                                     <div class="header">
-                                        <h4 class="title">Inbox</h4>
+                                        <h4 class="title">Bulletin Board</h4>
 
                                     </div>
                                     <div class="content">
@@ -166,13 +161,12 @@
                                                     <td class="view-message">
                                                         <form id="verifyForm" name="verifyForm" action="${formAction}" method="post">
 
-                                                            <input type="hidden" name="messageid" value=<%= ((ArrayList) ((ArrayList) request.getAttribute("inbox")).get(0)).get(0)%> readonly="readonly" />
+                                                            <input type="hidden" name="messageid" value=<%= ((ArrayList) ((ArrayList) request.getAttribute("board")).get(0)).get(0)%> readonly="readonly" />
                                                             <c:url var="formAction" value="/BackController" />
                                                             <input type="submit" value="Read" /> 
                                                         </form></td>
-
-                                                    <td class="view-message  dont-show"><%= ((ArrayList) ((ArrayList) request.getAttribute("inbox")).get(0)).get(1)%></td>
-                                                    <td class="view-message "><%= ((ArrayList) ((ArrayList) request.getAttribute("inbox")).get(0)).get(2)%></td>
+                                                     <td class="view-message"></td>
+                                                    <td class="view-message"><%= ((ArrayList) ((ArrayList) request.getAttribute("board")).get(0)).get(1)%></td>
                                                     <td class="view-message"><span class="label label-danger pull-right">unread</span> </td>
                                                 </tr>
 
@@ -456,5 +450,3 @@
 
 
 </html>
-
-

@@ -22,13 +22,33 @@ public class BulletinEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
+    private String subject;
 
     public BulletinEntity() {
     }
     
-    public void createBulletin(String message) {
+    public void createBulletin(String message, String subject) {
+        this.subject = subject;
         this.message = message;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    
     
     public Long getId() {
         return id;

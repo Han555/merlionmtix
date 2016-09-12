@@ -36,6 +36,7 @@ import session.stateless.UnlockAccountSessionLocal;
  */
 @WebServlet(name = "BackController", urlPatterns = {"/BackController", "/BackController?*"})
 public class BackController extends HttpServlet {
+
     @EJB
     private BulletinSessionLocal bulletinSession;
     @EJB
@@ -51,7 +52,6 @@ public class BackController extends HttpServlet {
     private LockAccountSessionLocal lockAccountSession;
     @EJB
     private LoginSessionLocal loginSession;
-    
 
     public String currentUser;
     public String subject = "";
@@ -294,6 +294,26 @@ public class BackController extends HttpServlet {
                 request.setAttribute("username", currentUser);
                 request.setAttribute("inbox", inbox);
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
+            } else if (action.equals("bulletinBoard")) {
+                ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
+                request.setAttribute("board", board);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/bulletinBoard.jsp").forward(request, response);
+            } else if (action.equals("composeBulletin")) {
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/composeBulletin.jsp").forward(request, response);
+            } else if (action.equals("createBulletin")) {
+                bulletinManager.releaseMessage(request.getParameter("message"), request.getParameter("subject"));
+                request.setAttribute("created", "true");
+                request.setAttribute("username", currentUser);
+                ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
+                request.setAttribute("board", board);
+                request.getRequestDispatcher("/bulletinBoard.jsp").forward(request, response);
+            } else if (action.equals("readBulletin")) {
+                ArrayList<String> message = bulletinManager.retrieveMessage(request.getParameter("messageid"));
+                request.setAttribute("username", currentUser);
+                request.setAttribute("message", message);
+                request.getRequestDispatcher("/readBulletin.jsp").forward(request, response);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

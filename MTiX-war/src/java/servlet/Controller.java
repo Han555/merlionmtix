@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import manager.BulletinManager;
 import manager.LockManager;
 import manager.LogManager;
 import manager.LoginManager;
@@ -25,6 +26,7 @@ import manager.MessageManager;
 import manager.RegisterManager;
 import manager.ResetPasswordManager;
 import manager.UnlockManager;
+import session.stateless.BulletinSessionLocal;
 import session.stateless.LockAccountSessionLocal;
 import session.stateless.LoginSessionLocal;
 import session.stateless.MessageSessionLocal;
@@ -38,6 +40,8 @@ import session.stateless.UnlockAccountSessionLocal;
  */
 @WebServlet(name = "Controller", urlPatterns = {"/Controller", "/Controller?*"})
 public class Controller extends HttpServlet {
+    @EJB
+    private BulletinSessionLocal bulletinSession;
 
     @EJB
     private MessageSessionLocal messageSession;
@@ -80,7 +84,8 @@ public class Controller extends HttpServlet {
             ResetPasswordManager resetManager = new ResetPasswordManager(resetPasswordSession);
             LogManager logManager = new LogManager();
             MessageManager messageManager = new MessageManager(messageSession);
-
+            BulletinManager bulletinManager = new BulletinManager(bulletinSession);
+            
             action = request.getParameter("action");
             String name = request.getParameter("name");
             System.out.println("here special");
@@ -164,7 +169,7 @@ public class Controller extends HttpServlet {
                                 request.getRequestDispatcher("/login.jsp").forward(request, response);
                             }
                             //logManager.logMessage(username + " logged in.");
-                            
+
                         }
                     } else if (lockManager.checkLock(username, password)) {
                         System.out.println("here 5");
@@ -312,6 +317,16 @@ public class Controller extends HttpServlet {
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
             } else if (action.equals("buyTickets")) {
                 registerManager.createAdministrator();
+            } else if (action.equals("bulletinBoard")) {
+                ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
+                request.setAttribute("board", board);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/bulletinBoard.jsp").forward(request, response);
+            } else if (action.equals("readBulletin")) {
+                ArrayList<String> message = bulletinManager.retrieveMessage(request.getParameter("messageid"));
+                request.setAttribute("username", currentUser);
+                request.setAttribute("message", message);
+                request.getRequestDispatcher("/readBulletin.jsp").forward(request, response);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
