@@ -40,6 +40,7 @@ import session.stateless.UnlockAccountSessionLocal;
  */
 @WebServlet(name = "Controller", urlPatterns = {"/Controller", "/Controller?*"})
 public class Controller extends HttpServlet {
+
     @EJB
     private BulletinSessionLocal bulletinSession;
 
@@ -77,6 +78,8 @@ public class Controller extends HttpServlet {
 
         try {
             String action;
+            int page = 1;
+            int recordsPerPage = 8;
             RegisterManager registerManager = new RegisterManager(registerSession);
             LoginManager loginManager = new LoginManager(loginSession);
             LockManager lockManager = new LockManager(lockAccountSession);
@@ -85,7 +88,7 @@ public class Controller extends HttpServlet {
             LogManager logManager = new LogManager();
             MessageManager messageManager = new MessageManager(messageSession);
             BulletinManager bulletinManager = new BulletinManager(bulletinSession);
-            
+
             action = request.getParameter("action");
             String name = request.getParameter("name");
             System.out.println("here special");
@@ -318,8 +321,17 @@ public class Controller extends HttpServlet {
             } else if (action.equals("buyTickets")) {
                 registerManager.createAdministrator();
             } else if (action.equals("bulletinBoard")) {
+                if (request.getParameter("page") != null) {
+                    page = Integer.parseInt(request.getParameter("page"));
+                }
                 ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
-                request.setAttribute("board", board);
+                int noOfRecords = board.size();
+                int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+                ArrayList<ArrayList<String>> boardPage = bulletinManager.boardPage(board, (page-1)*recordsPerPage, recordsPerPage);
+                request.setAttribute("noOfPages", noOfPages);
+                request.setAttribute("recordSize", String.valueOf(boardPage.size()));
+                request.setAttribute("currentPage", page);
+                request.setAttribute("board", boardPage);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/bulletinBoard.jsp").forward(request, response);
             } else if (action.equals("readBulletin")) {
@@ -327,6 +339,11 @@ public class Controller extends HttpServlet {
                 request.setAttribute("username", currentUser);
                 request.setAttribute("message", message);
                 request.getRequestDispatcher("/readBulletin.jsp").forward(request, response);
+            } else if (action.equals("testTable")) {
+                ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
+                request.setAttribute("board", board);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/testTable.jsp").forward(request, response);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

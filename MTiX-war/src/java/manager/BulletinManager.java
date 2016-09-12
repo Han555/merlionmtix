@@ -30,4 +30,21 @@ public class BulletinManager {
     public ArrayList<String> retrieveMessage(String id) {
         return bulletinSession.getMessage(id);
     }
+    
+    public ArrayList<ArrayList<String>> boardPage(ArrayList<ArrayList<String>> board, int offset, int noOfRecords) {
+        ArrayList<ArrayList<String>> boardPage = new ArrayList();
+        int size = board.size();
+        int finalRecord = offset + noOfRecords;
+        if(finalRecord >= size) {
+            finalRecord = size;
+        }
+        for(int i=offset; i<finalRecord; i++) {
+            ArrayList<String> page = new ArrayList();
+            page.add(board.get(i).get(0));
+            page.add(board.get(i).get(1));
+            boardPage.add(page);
+        }
+        
+        return boardPage;
+    }
 }

@@ -174,7 +174,7 @@
                             <div class="col-md-6">
                                 <div class="card ">
                                     <div class="header">
-                                        <c:url var="linkHref" value="/Controller?action=message" />
+                                        <c:url var="linkHref" value="/Controller?action=testTable" />
                                         <a class="title" href="${linkHref}">My Finances</a>
                                     </div>
                                     
