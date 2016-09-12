@@ -44,7 +44,7 @@
     </head>
     <body>
 
-        
+
 
         <div class="wrapper">
             <div class="sidebar" data-color="orange" data-image="assets/img/sidebar-5.jpg">
@@ -70,11 +70,14 @@
                             </a>
                         </li>
                         <li>
-                            <c:url var="linkHref" value="/BackController?action=createAccount" />
-                            <a  href="${linkHref}">
-                                <i class="pe-7s-user"></i>
-                                <p>Create Account</p>
-                            </a>
+                            <c:if test="${role == 'super administrator'}">
+
+                                <c:url var="linkHref" value="/BackController?action=createAccount" />
+                                <a  href="${linkHref}">
+                                    <i class="pe-7s-user"></i>
+                                    <p>Create Account</p>
+                                </a>
+                            </c:if>
                         </li>
                     </ul>
                 </div>
@@ -98,7 +101,14 @@
 
                             <ul class="nav navbar-nav navbar-right">
 
+                                <li>
 
+                                    <c:url var="linkHref" value="/BackController?action=bulletinBoard" />
+                                    <a href="${linkHref}">
+                                        Bulletin Board
+                                    </a>
+
+                                </li>
                                 <li>
                                     <a href="#">
                                         Log out
@@ -126,16 +136,16 @@
                                         <h4 class="title">Bulletin Message</h4>   
                                     </div>
                                     <div class="content">             
-                                        
-                                            <div class="row">
-                                                <label for="email">Subject:</label><br />
-                                                <p><%= ((ArrayList) request.getAttribute("message")).get(0)%> </p>
-                                            </div>
-                                            <div class="row">
-                                                <label for="message">Message:</label><br />
-                                                <p><%= ((ArrayList) request.getAttribute("message")).get(1)%> </p>
-                                            </div>
-                                         					
+
+                                        <div class="row">
+                                            <label for="email">Subject:</label><br />
+                                            <p><%= ((ArrayList) request.getAttribute("message")).get(0)%> </p>
+                                        </div>
+                                        <div class="row">
+                                            <label for="message">Message:</label><br />
+                                            <p><%= ((ArrayList) request.getAttribute("message")).get(1)%> </p>
+                                        </div>
+
 
                                     </div>
                                 </div>

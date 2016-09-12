@@ -65,19 +65,22 @@
                     </div>
 
                     <ul class="nav">
-                        
+
                         <li>
                             <a href="user.html">
                                 <i class="pe-7s-user"></i>
                                 <p>User Profile</p>
                             </a>
                         </li>
-                         <li>
-                            <c:url var="linkHref" value="/BackController?action=createAccount" />
-                            <a  href="${linkHref}">
-                                <i class="pe-7s-user"></i>
-                                <p>Create Account</p>
-                            </a>
+                        <li>
+                            <c:if test="${role == 'super administrator'}">
+
+                                <c:url var="linkHref" value="/BackController?action=createAccount" />
+                                <a  href="${linkHref}">
+                                    <i class="pe-7s-user"></i>
+                                    <p>Create Account</p>
+                                </a>
+                            </c:if>
                         </li>
 
                     </ul>
@@ -125,10 +128,12 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <c:url var="linkHref" value="/BackController?action=bulletinBoard" />
-                                    <a href="${linkHref}">
-                                        Bulletin Board
-                                    </a>
+                                    
+                                        <c:url var="linkHref" value="/BackController?action=bulletinBoard" />
+                                        <a href="${linkHref}">
+                                            Bulletin Board
+                                        </a>
+                                    
                                 </li>
                                 <li>
                                     <a href="#">
@@ -148,7 +153,7 @@
                             <c:if test="${reply == 'true'}">
                                 <font color="red">Reply successfully sent!</font><br/>
                             </c:if>
-                            
+
 
 
                             <div class="col-md-8">
@@ -159,6 +164,14 @@
                                     </div>
                                     <div class="content">
                                         <table class="table table-inbox table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Sender</th>
+                                                    <th>Subject</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
                                             <tbody>
                                                 <tr class="unread">
 

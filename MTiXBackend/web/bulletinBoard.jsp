@@ -65,19 +65,22 @@
                     </div>
 
                     <ul class="nav">
-                        
+
                         <li>
                             <a href="user.html">
                                 <i class="pe-7s-user"></i>
                                 <p>User Profile</p>
                             </a>
                         </li>
-                         <li>
-                            <c:url var="linkHref" value="/BackController?action=createAccount" />
-                            <a  href="${linkHref}">
-                                <i class="pe-7s-user"></i>
-                                <p>Create Account</p>
-                            </a>
+                        <li>
+                            <c:if test="${role == 'super administrator'}">
+
+                                <c:url var="linkHref" value="/BackController?action=createAccount" />
+                                <a  href="${linkHref}">
+                                    <i class="pe-7s-user"></i>
+                                    <p>Create Account</p>
+                                </a>
+                            </c:if>
                         </li>
 
                     </ul>
@@ -119,12 +122,14 @@
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <c:url var="linkHref" value="/BackController?action=composeBulletin" />
-                                    <a href="${linkHref}">
-                                        New Bulletin
-                                    </a>
+                                    <c:if test="${role == 'super administrator'}">
+                                        <c:url var="linkHref" value="/BackController?action=composeBulletin" />
+                                        <a href="${linkHref}">
+                                            New Bulletin
+                                        </a>
+                                    </c:if>
                                 </li>
-                            
+
                                 <li>
                                     <a href="#">
                                         Log out
@@ -140,7 +145,7 @@
                     <div class="container-fluid">
                         <div class="row">
 
-                           
+
                             <c:if test="${created == 'true'}">
                                 <font color="red">Bulletin message successfully broadcast!</font><br/>
                             </c:if>
@@ -154,6 +159,14 @@
                                     </div>
                                     <div class="content">
                                         <table class="table table-inbox table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Subject</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
                                             <tbody>
                                                 <tr class="unread">
 
@@ -165,7 +178,7 @@
                                                             <c:url var="formAction" value="/BackController" />
                                                             <input type="submit" value="Read" /> 
                                                         </form></td>
-                                                     <td class="view-message"></td>
+                                                    <td class="view-message"></td>
                                                     <td class="view-message"><%= ((ArrayList) ((ArrayList) request.getAttribute("board")).get(0)).get(1)%></td>
                                                     <td class="view-message"><span class="label label-danger pull-right">unread</span> </td>
                                                 </tr>

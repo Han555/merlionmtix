@@ -146,6 +146,14 @@
                                     </div>
                                     <div class="content">
                                         <table class="table table-inbox table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Subject</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
                                             <tbody>
                                                 <tr class="unread">
 

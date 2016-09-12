@@ -70,11 +70,14 @@
                             </a>
                         </li>
                         <li>
-                            <c:url var="linkHref" value="/BackController?action=createAccount" />
-                            <a  href="${linkHref}">
-                                <i class="pe-7s-user"></i>
-                                <p>Create Account</p>
-                            </a>
+                            <c:if test="${role == 'super administrator'}">
+
+                                <c:url var="linkHref" value="/BackController?action=createAccount" />
+                                <a  href="${linkHref}">
+                                    <i class="pe-7s-user"></i>
+                                    <p>Create Account</p>
+                                </a>
+                            </c:if>
                         </li>
                     </ul>
                 </div>

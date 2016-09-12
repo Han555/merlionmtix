@@ -55,6 +55,7 @@ public class BackController extends HttpServlet {
 
     public String currentUser;
     public String subject = "";
+    public String role = "";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -114,11 +115,14 @@ public class BackController extends HttpServlet {
                             request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
                         }
                         if (lockManager.passThrough(username)) {
+                            role =loginManager.getRoles(username);
+                            System.out.println("role: " + role);
                             if (loginManager.getRoles(username).equals("super administrator") || loginManager.getRoles(username).equals("property manager")) {
                                 System.out.println("here new 1");
                                 logManager.logMessage(username + " logged in.");
                                 currentUser = username;
                                 request.setAttribute("username", username);
+                                request.setAttribute("role", role);
                                 request.getRequestDispatcher("/home.jsp").forward(request, response);
                             } else {
                                 request.setAttribute("role", "true");
@@ -130,12 +134,15 @@ public class BackController extends HttpServlet {
                             request.setAttribute("account", username);
                             request.getRequestDispatcher("/login.jsp").forward(request, response);
                         } else {
-                            System.out.println("here 4");
+                            System.out.println("here 4");                          
+                            role = loginManager.getRoles(username);
+                            System.out.println("role: " + role);
                             if (loginManager.getRoles(username).equals("super administrator") || loginManager.getRoles(username).equals("property manager")) {
                                 System.out.println("here new 1");
                                 logManager.logMessage(username + " logged in.");
                                 currentUser = username;
                                 request.setAttribute("username", username);
+                                request.setAttribute("role", role);
                                 request.getRequestDispatcher("/home.jsp").forward(request, response);
                             } else {
                                 request.setAttribute("role", "true");
@@ -202,7 +209,7 @@ public class BackController extends HttpServlet {
                 unlockManager.unlock(username);
                 request.setAttribute("unlock", "true");
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
-            } else if (action.equals("createAccount")) {
+            } else if (action.equals("createAccount")) {               
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/createAccount.jsp").forward(request, response);
             } else if (action.equals("creating")) {
@@ -218,6 +225,7 @@ public class BackController extends HttpServlet {
                     request.getRequestDispatcher("/createAccount.jsp").forward(request, response);
                 }
             } else if (action.equals("home")) {
+                request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/home.jsp").forward(request, response);
             } else if (action.equals("sendResetPassword")) {
@@ -255,10 +263,12 @@ public class BackController extends HttpServlet {
             } else if (action.equals("message")) {
                 ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
                 request.setAttribute("username", currentUser);
+                request.setAttribute("role", role);
                 request.setAttribute("inbox", inbox);
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
             } else if (action.equals("compose")) {
                 System.out.println("username: " + currentUser);
+                request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/compose.jsp").forward(request, response);
             } else if (action.equals("createMessage")) {
@@ -277,10 +287,12 @@ public class BackController extends HttpServlet {
                 }
             } else if (action.equals("readMessage")) {
                 System.out.println("Message ID: " + request.getParameter("messageid"));
+                request.setAttribute("role", role);
                 request.setAttribute("message", messageManager.getMessage(request.getParameter("messageid")));
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/readMessage.jsp").forward(request, response);
             } else if (action.equals("replyMessage")) {
+                request.setAttribute("role", role);
                 request.setAttribute("receiver", request.getParameter("receiver"));
                 request.setAttribute("username", request.getParameter("username"));
                 subject = "Re: " + messageManager.getMessage(request.getParameter("messageid")).get(1);
@@ -290,6 +302,7 @@ public class BackController extends HttpServlet {
             } else if (action.equals("replyResult")) {
                 messageManager.sendMessage(request.getParameter("username"), request.getParameter("receiver"), subject, request.getParameter("reply"));
                 request.setAttribute("reply", "true");
+                request.setAttribute("role", role);
                 ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
                 request.setAttribute("username", currentUser);
                 request.setAttribute("inbox", inbox);
@@ -297,12 +310,15 @@ public class BackController extends HttpServlet {
             } else if (action.equals("bulletinBoard")) {
                 ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
                 request.setAttribute("board", board);
+                request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/bulletinBoard.jsp").forward(request, response);
             } else if (action.equals("composeBulletin")) {
+                request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/composeBulletin.jsp").forward(request, response);
             } else if (action.equals("createBulletin")) {
+                request.setAttribute("role", role);
                 bulletinManager.releaseMessage(request.getParameter("message"), request.getParameter("subject"));
                 request.setAttribute("created", "true");
                 request.setAttribute("username", currentUser);
@@ -310,6 +326,7 @@ public class BackController extends HttpServlet {
                 request.setAttribute("board", board);
                 request.getRequestDispatcher("/bulletinBoard.jsp").forward(request, response);
             } else if (action.equals("readBulletin")) {
+                request.setAttribute("role", role);
                 ArrayList<String> message = bulletinManager.retrieveMessage(request.getParameter("messageid"));
                 request.setAttribute("username", currentUser);
                 request.setAttribute("message", message);
