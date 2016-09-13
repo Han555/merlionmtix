@@ -79,7 +79,9 @@ public class BackController extends HttpServlet {
             RegisterManager registerManager = new RegisterManager(registerSession);
             MessageManager messageManager = new MessageManager(messageSession);
             BulletinManager bulletinManager = new BulletinManager(bulletinSession);
-
+                       
+            int page = 1;
+            int recordsPerPage = 8;
             String action;
             action = request.getParameter("action");
             System.out.println("Action = " + action);
@@ -115,7 +117,7 @@ public class BackController extends HttpServlet {
                             request.getRequestDispatcher("/changePassword.jsp").forward(request, response);
                         }
                         if (lockManager.passThrough(username)) {
-                            role =loginManager.getRoles(username);
+                            role = loginManager.getRoles(username);
                             System.out.println("role: " + role);
                             if (loginManager.getRoles(username).equals("super administrator") || loginManager.getRoles(username).equals("property manager")) {
                                 System.out.println("here new 1");
@@ -134,7 +136,7 @@ public class BackController extends HttpServlet {
                             request.setAttribute("account", username);
                             request.getRequestDispatcher("/login.jsp").forward(request, response);
                         } else {
-                            System.out.println("here 4");                          
+                            System.out.println("here 4");
                             role = loginManager.getRoles(username);
                             System.out.println("role: " + role);
                             if (loginManager.getRoles(username).equals("super administrator") || loginManager.getRoles(username).equals("property manager")) {
@@ -209,7 +211,7 @@ public class BackController extends HttpServlet {
                 unlockManager.unlock(username);
                 request.setAttribute("unlock", "true");
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
-            } else if (action.equals("createAccount")) {               
+            } else if (action.equals("createAccount")) {
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/createAccount.jsp").forward(request, response);
             } else if (action.equals("creating")) {
@@ -261,10 +263,18 @@ public class BackController extends HttpServlet {
                     request.getRequestDispatcher("/login.jsp").forward(request, response);
                 }
             } else if (action.equals("message")) {
+                if (request.getParameter("page") != null) {
+                    page = Integer.parseInt(request.getParameter("page"));
+                }
                 ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
+                int noOfRecords = inbox.size();
+                int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+                ArrayList<ArrayList<String>> inboxPage = messageManager.inboxPage(inbox, (page - 1) * recordsPerPage, recordsPerPage);
+                request.setAttribute("noOfPages", noOfPages);
+                request.setAttribute("recordSize", String.valueOf(inboxPage.size()));
+                request.setAttribute("currentPage", page);
                 request.setAttribute("username", currentUser);
-                request.setAttribute("role", role);
-                request.setAttribute("inbox", inbox);
+                request.setAttribute("inbox", inboxPage);
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
             } else if (action.equals("compose")) {
                 System.out.println("username: " + currentUser);
@@ -279,6 +289,8 @@ public class BackController extends HttpServlet {
                 if (messageManager.sendMessage(currentUser, request.getParameter("to"), request.getParameter("subject"), request.getParameter("message"))) {
                     System.out.println("Entered message 2");
                     request.setAttribute("sent", "true");
+                    request.setAttribute("role", role);
+                    request.setAttribute("username", currentUser);
                     request.getRequestDispatcher("/compose.jsp").forward(request, response);
                 } else {
                     System.out.println("Entered message 3");
@@ -303,14 +315,32 @@ public class BackController extends HttpServlet {
                 messageManager.sendMessage(request.getParameter("username"), request.getParameter("receiver"), subject, request.getParameter("reply"));
                 request.setAttribute("reply", "true");
                 request.setAttribute("role", role);
+                
+                if (request.getParameter("page") != null) {
+                    page = Integer.parseInt(request.getParameter("page"));
+                }
                 ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
+                int noOfRecords = inbox.size();
+                int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+                ArrayList<ArrayList<String>> inboxPage = messageManager.inboxPage(inbox, (page - 1) * recordsPerPage, recordsPerPage);
+                request.setAttribute("noOfPages", noOfPages);
+                request.setAttribute("recordSize", String.valueOf(inboxPage.size()));
+                request.setAttribute("currentPage", page);
                 request.setAttribute("username", currentUser);
-                request.setAttribute("inbox", inbox);
+                request.setAttribute("inbox", inboxPage);
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
             } else if (action.equals("bulletinBoard")) {
+                if (request.getParameter("page") != null) {
+                    page = Integer.parseInt(request.getParameter("page"));
+                }
                 ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
-                request.setAttribute("board", board);
-                request.setAttribute("role", role);
+                int noOfRecords = board.size();
+                int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+                ArrayList<ArrayList<String>> boardPage = bulletinManager.boardPage(board, (page - 1) * recordsPerPage, recordsPerPage);
+                request.setAttribute("noOfPages", noOfPages);
+                request.setAttribute("recordSize", String.valueOf(boardPage.size()));
+                request.setAttribute("currentPage", page);
+                request.setAttribute("board", boardPage);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/bulletinBoard.jsp").forward(request, response);
             } else if (action.equals("composeBulletin")) {
@@ -321,9 +351,19 @@ public class BackController extends HttpServlet {
                 request.setAttribute("role", role);
                 bulletinManager.releaseMessage(request.getParameter("message"), request.getParameter("subject"));
                 request.setAttribute("created", "true");
-                request.setAttribute("username", currentUser);
+                
+                 if (request.getParameter("page") != null) {
+                    page = Integer.parseInt(request.getParameter("page"));
+                }
                 ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
-                request.setAttribute("board", board);
+                int noOfRecords = board.size();
+                int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+                ArrayList<ArrayList<String>> boardPage = bulletinManager.boardPage(board, (page - 1) * recordsPerPage, recordsPerPage);
+                request.setAttribute("noOfPages", noOfPages);
+                request.setAttribute("recordSize", String.valueOf(boardPage.size()));
+                request.setAttribute("currentPage", page);
+                request.setAttribute("board", boardPage);
+                request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/bulletinBoard.jsp").forward(request, response);
             } else if (action.equals("readBulletin")) {
                 request.setAttribute("role", role);

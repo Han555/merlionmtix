@@ -26,12 +26,30 @@ public class MessageEntity implements Serializable {
     private String sender;
     private String content;
     private String subject;
+    private String status;
 
     public void createMessage(String to, String from, String content, String subject) {
         this.receiver = to;
         this.sender = from;
         this.content = content;
         this.subject = subject;
+        this.status = "unread";
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getTo() {

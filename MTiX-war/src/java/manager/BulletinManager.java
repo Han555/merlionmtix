@@ -24,7 +24,16 @@ public class BulletinManager {
     }
     
     public ArrayList<ArrayList<String>> getBoard() {
-        return bulletinSession.retrieveBulletin();
+        ArrayList<ArrayList<String>> board = new ArrayList();
+        ArrayList<ArrayList<String>> subBoard = bulletinSession.retrieveBulletin();
+        int size = subBoard.size();
+        size--;
+        
+        for(int i=size; i>=0; i--) {
+            board.add(subBoard.get(i));
+        }
+        
+        return board;
     }
     
     public ArrayList<String> retrieveMessage(String id) {

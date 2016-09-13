@@ -180,6 +180,7 @@
                                                         String subject = boardPage.get(i).get(1);
                                                 %>
 
+                                                <c:url var="formAction" value="/Controller?action=readBulletin" />
 
                                                 <tr class="unread">
 
@@ -188,12 +189,12 @@
                                                         <form id="verifyForm" name="verifyForm" action="${formAction}" method="post">
 
                                                             <input type="hidden" name="messageid" value=<%= id%> readonly="readonly" />
-                                                            <c:url var="formAction" value="/BackController" />
+                                                            <c:url var="formAction" value="/Controller" />
                                                             <input type="submit" value="Read" /> 
                                                         </form></td>
                                                     <td class="view-message"></td>
                                                     <td class="view-message"><%= subject%></td>
-                                                    <td class="view-message"><span class="label label-danger pull-right">unread</span> </td>
+                                                    <td class="view-message"></td>
                                                 </tr>
                                                 <%
                                                     }
@@ -212,11 +213,11 @@
                                                         <c:otherwise>
                                                             <td>
                                                                 <c:url var="linkHref" value="/Controller?action=bulletinBoard&page=${i}" />
-                                                                
-                                                                    <a href="${linkHref}">${i}</a></td>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </c:forEach>
+
+                                                                <a href="${linkHref}">${i}</a></td>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:forEach>
                                             </tr>
                                         </table>
                                         <div class="footer">

@@ -274,9 +274,18 @@ public class Controller extends HttpServlet {
                 // session.invalidate();
                 request.getRequestDispatcher("/logout.jsp").forward(request, response);
             } else if (action.equals("message")) {
+                if (request.getParameter("page") != null) {
+                    page = Integer.parseInt(request.getParameter("page"));
+                }
                 ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
+                int noOfRecords = inbox.size();
+                int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+                ArrayList<ArrayList<String>> inboxPage = messageManager.inboxPage(inbox, (page - 1) * recordsPerPage, recordsPerPage);
+                request.setAttribute("noOfPages", noOfPages);
+                request.setAttribute("recordSize", String.valueOf(inboxPage.size()));
+                request.setAttribute("currentPage", page);
                 request.setAttribute("username", currentUser);
-                request.setAttribute("inbox", inbox);
+                request.setAttribute("inbox", inboxPage);
                 request.getRequestDispatcher("/message.jsp").forward(request, response);
             } else if (action.equals("home")) {
                 request.setAttribute("username", currentUser);
@@ -293,6 +302,7 @@ public class Controller extends HttpServlet {
                 if (messageManager.sendMessage(currentUser, request.getParameter("to"), request.getParameter("subject"), request.getParameter("message"))) {
                     System.out.println("Entered message 2");
                     request.setAttribute("sent", "true");
+                    request.setAttribute("username", currentUser);
                     request.getRequestDispatcher("/compose.jsp").forward(request, response);
                 } else {
                     System.out.println("Entered message 3");
@@ -314,10 +324,20 @@ public class Controller extends HttpServlet {
             } else if (action.equals("replyResult")) {
                 messageManager.sendMessage(request.getParameter("username"), request.getParameter("receiver"), subject, request.getParameter("reply"));
                 request.setAttribute("reply", "true");
+                
+                if (request.getParameter("page") != null) {
+                    page = Integer.parseInt(request.getParameter("page"));
+                }
                 ArrayList<ArrayList<String>> inbox = messageManager.getInbox(currentUser);
+                int noOfRecords = inbox.size();
+                int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+                ArrayList<ArrayList<String>> inboxPage = messageManager.inboxPage(inbox, (page - 1) * recordsPerPage, recordsPerPage);
+                request.setAttribute("noOfPages", noOfPages);
+                request.setAttribute("recordSize", String.valueOf(inboxPage.size()));
+                request.setAttribute("currentPage", page);
                 request.setAttribute("username", currentUser);
-                request.setAttribute("inbox", inbox);
-                request.getRequestDispatcher("/message.jsp").forward(request, response);
+                request.setAttribute("inbox", inboxPage);
+                request.getRequestDispatcher("/message.jsp").forward(request, response);           
             } else if (action.equals("buyTickets")) {
                 registerManager.createAdministrator();
             } else if (action.equals("bulletinBoard")) {
@@ -327,7 +347,7 @@ public class Controller extends HttpServlet {
                 ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
                 int noOfRecords = board.size();
                 int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
-                ArrayList<ArrayList<String>> boardPage = bulletinManager.boardPage(board, (page-1)*recordsPerPage, recordsPerPage);
+                ArrayList<ArrayList<String>> boardPage = bulletinManager.boardPage(board, (page - 1) * recordsPerPage, recordsPerPage);
                 request.setAttribute("noOfPages", noOfPages);
                 request.setAttribute("recordSize", String.valueOf(boardPage.size()));
                 request.setAttribute("currentPage", page);
