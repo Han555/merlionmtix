@@ -46,11 +46,11 @@
 
     </head>
     <body>
-        <c:url var="formAction" value="/Controller?action=readMessage" />
+        <c:url var="formAction" value="/BackController?action=readMessage" />
 
 
         <div class="wrapper">
-            <div class="sidebar" data-color="azure" data-image="assets/img/sidebar-5.jpg">
+            <div class="sidebar" data-color="orange" data-image="assets/img/sidebar-5.jpg">
 
                 <!--
             
@@ -65,17 +65,22 @@
                     </div>
 
                     <ul class="nav">
-                        <li class="active">
-                            <a href="dashboard.html">
-                                <i class="pe-7s-graph"></i>
-                                <p>My Cart</p>
-                            </a>
-                        </li>
+
                         <li>
                             <a href="user.html">
                                 <i class="pe-7s-user"></i>
                                 <p>User Profile</p>
                             </a>
+                        </li>
+                        <li>
+                            <c:if test="${role == 'super administrator'}">
+
+                                <c:url var="linkHref" value="/BackController?action=createAccount" />
+                                <a  href="${linkHref}">
+                                    <i class="pe-7s-user"></i>
+                                    <p>Create Account</p>
+                                </a>
+                            </c:if>
                         </li>
 
                     </ul>
@@ -92,7 +97,7 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <c:url var="linkHref" value="/Controller?action=home" />
+                            <c:url var="linkHref" value="/BackController?action=home" />
                             <a class="navbar-brand" href="${linkHref}">Home</a>
                         </div>
                         <div class="collapse navbar-collapse">
@@ -117,12 +122,19 @@
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <c:url var="linkHref" value="/Controller?action=compose" />
+                                    <c:url var="linkHref" value="/BackController?action=compose" />
                                     <a href="${linkHref}">
                                         New
                                     </a>
                                 </li>
+                                <li>
 
+                                    <c:url var="linkHref" value="/BackController?action=bulletinBoard" />
+                                    <a href="${linkHref}">
+                                        Bulletin Board
+                                    </a>
+
+                                </li>
                                 <li>
                                     <a href="#">
                                         Log out
@@ -137,10 +149,11 @@
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row">
-                            
+
                             <c:if test="${reply == 'true'}">
                                 <font color="red">Reply successfully sent!</font><br/>
                             </c:if>
+
 
 
                             <div class="col-md-8">
@@ -151,7 +164,7 @@
                                     </div>
                                     <div class="content">
                                         <table class="table table-inbox table-hover">
-                                               <thead>
+                                            <thead>
                                                 <tr>
                                                     <th></th>
                                                     <th>Sender</th>
@@ -169,9 +182,9 @@
                                                         String subject = inboxPage.get(i).get(2);
                                                         String status = inboxPage.get(i).get(3);
                                                 %>
-                                                
-                                                <c:url var="formAction" value="/Controller?action=readMessage" />
-                                                
+
+                                                <c:url var="formAction" value="/BackController?action=readMessage" />
+
                                                 <tr class="unread">
 
 
@@ -179,7 +192,7 @@
                                                         <form id="verifyForm" name="verifyForm" action="${formAction}" method="post">
 
                                                             <input type="hidden" name="messageid" value=<%= id%> readonly="readonly" />
-                                                            <c:url var="formAction" value="/Controller" />
+                                                            <c:url var="formAction" value="/BackController" />
                                                             <input type="submit" value="Read" /> 
                                                         </form></td>
 
@@ -196,7 +209,7 @@
                                                 %>
                                             </tbody>
                                         </table>
-                                            <table border="1" cellpadding="5" cellspacing="5">
+                                        <table border="1" cellpadding="5" cellspacing="5">
                                             <tr>
                                                 <c:forEach begin="1" end="${noOfPages}" var="i">
                                                     <c:choose>
@@ -205,7 +218,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td>
-                                                                <c:url var="linkHref" value="/Controller?action=message&page=${i}" />
+                                                                <c:url var="linkHref" value="/BackController?action=message&page=${i}" />
 
                                                                 <a href="${linkHref}">${i}</a></td>
                                                             </c:otherwise>
@@ -214,7 +227,7 @@
                                             </tr>
                                         </table>
                                         <div class="footer">
-                                            
+
                                         </div>
                                     </div>
                                 </div>

@@ -16,64 +16,28 @@ import javax.persistence.Id;
  * @author Student-ID
  */
 @Entity
-public class MessageEntity implements Serializable {
-
+public class BulletinEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String receiver;
-    private String sender;
-    private String content;
+    private String message;
     private String subject;
-    private String status;
 
-    public void createMessage(String to, String from, String content, String subject) {
-        this.receiver = to;
-        this.sender = from;
-        this.content = content;
+    public BulletinEntity() {
+    }
+    
+    public void createBulletin(String message, String subject) {
         this.subject = subject;
-        this.status = "unread";
+        this.message = message;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public String getMessage() {
+        return message;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getTo() {
-        return receiver;
-    }
-
-    public void setTo(String to) {
-        this.receiver = to;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getSubject() {
@@ -84,9 +48,8 @@ public class MessageEntity implements Serializable {
         this.subject = subject;
     }
 
-    public MessageEntity() {
-    }
-
+    
+    
     public Long getId() {
         return id;
     }
@@ -105,10 +68,10 @@ public class MessageEntity implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MessageEntity)) {
+        if (!(object instanceof BulletinEntity)) {
             return false;
         }
-        MessageEntity other = (MessageEntity) object;
+        BulletinEntity other = (BulletinEntity) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -117,7 +80,7 @@ public class MessageEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.MessageEntity[ id=" + id + " ]";
+        return "entity.BulletinEntity[ id=" + id + " ]";
     }
-
+    
 }

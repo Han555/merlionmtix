@@ -1,6 +1,6 @@
 <%-- 
-    Document   : message
-    Created on : Sep 4, 2016, 5:36:06 PM
+    Document   : bulletinBoard
+    Created on : Sep 12, 2016, 12:41:38 PM
     Author     : Student-ID
 --%>
 
@@ -17,7 +17,7 @@
         <link rel="icon" type="image/png" href="assets/img/favicon.ico">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-        <title>Messages</title>
+        <title>Bulletin Board</title>
 
         <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
         <meta name="viewport" content="width=device-width" />
@@ -46,11 +46,11 @@
 
     </head>
     <body>
-        <c:url var="formAction" value="/Controller?action=readMessage" />
+        <c:url var="formAction" value="/BackController?action=readBulletin" />
 
 
         <div class="wrapper">
-            <div class="sidebar" data-color="azure" data-image="assets/img/sidebar-5.jpg">
+            <div class="sidebar" data-color="orange" data-image="assets/img/sidebar-5.jpg">
 
                 <!--
             
@@ -65,17 +65,22 @@
                     </div>
 
                     <ul class="nav">
-                        <li class="active">
-                            <a href="dashboard.html">
-                                <i class="pe-7s-graph"></i>
-                                <p>My Cart</p>
-                            </a>
-                        </li>
+
                         <li>
                             <a href="user.html">
                                 <i class="pe-7s-user"></i>
                                 <p>User Profile</p>
                             </a>
+                        </li>
+                        <li>
+                            <c:if test="${role == 'super administrator'}">
+
+                                <c:url var="linkHref" value="/BackController?action=createAccount" />
+                                <a  href="${linkHref}">
+                                    <i class="pe-7s-user"></i>
+                                    <p>Create Account</p>
+                                </a>
+                            </c:if>
                         </li>
 
                     </ul>
@@ -92,7 +97,7 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <c:url var="linkHref" value="/Controller?action=home" />
+                            <c:url var="linkHref" value="/BackController?action=home" />
                             <a class="navbar-brand" href="${linkHref}">Home</a>
                         </div>
                         <div class="collapse navbar-collapse">
@@ -117,10 +122,12 @@
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <c:url var="linkHref" value="/Controller?action=compose" />
-                                    <a href="${linkHref}">
-                                        New
-                                    </a>
+                                    <c:if test="${role == 'super administrator'}">
+                                        <c:url var="linkHref" value="/BackController?action=composeBulletin" />
+                                        <a href="${linkHref}">
+                                            New Bulletin
+                                        </a>
+                                    </c:if>
                                 </li>
 
                                 <li>
@@ -137,41 +144,40 @@
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row">
-                            
-                            <c:if test="${reply == 'true'}">
-                                <font color="red">Reply successfully sent!</font><br/>
+
+
+                            <c:if test="${created == 'true'}">
+                                <font color="red">Bulletin message successfully broadcast!</font><br/>
                             </c:if>
 
 
                             <div class="col-md-8">
                                 <div class="card">
                                     <div class="header">
-                                        <h4 class="title">Inbox</h4>
+                                        <h4 class="title">Bulletin Board</h4>
 
                                     </div>
                                     <div class="content">
                                         <table class="table table-inbox table-hover">
-                                               <thead>
+                                            <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>Sender</th>
+                                                    <th></th>
                                                     <th>Subject</th>
-                                                    <th>Status</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <%
                                                     int size = (int) Integer.parseInt((String) request.getAttribute("recordSize"));
-                                                    ArrayList<ArrayList<String>> inboxPage = (ArrayList<ArrayList<String>>) request.getAttribute("inbox");
+                                                    ArrayList<ArrayList<String>> boardPage = (ArrayList<ArrayList<String>>) request.getAttribute("board");
                                                     for (int i = 0; i < size; i++) {
-                                                        String id = inboxPage.get(i).get(0);
-                                                        String sender = inboxPage.get(i).get(1);
-                                                        String subject = inboxPage.get(i).get(2);
-                                                        String status = inboxPage.get(i).get(3);
+                                                        String id = boardPage.get(i).get(0);
+                                                        String subject = boardPage.get(i).get(1);
                                                 %>
-                                                
-                                                <c:url var="formAction" value="/Controller?action=readMessage" />
-                                                
+
+                                                <c:url var="formAction" value="/BackController?action=readBulletin" />
+
                                                 <tr class="unread">
 
 
@@ -179,24 +185,20 @@
                                                         <form id="verifyForm" name="verifyForm" action="${formAction}" method="post">
 
                                                             <input type="hidden" name="messageid" value=<%= id%> readonly="readonly" />
-                                                            <c:url var="formAction" value="/Controller" />
+                                                            <c:url var="formAction" value="/BackController" />
                                                             <input type="submit" value="Read" /> 
                                                         </form></td>
-
-                                                    <td class="view-message  dont-show"><%= sender%></td>
-                                                    <td class="view-message "><%= subject%></td>
-                                                    <% if (status.equals("unread")) { %>
-                                                    <td class="view-message"><span class="label label-danger pull-right">unread</span> </td>
-                                                    <% } else { %>
+                                                    <td class="view-message"></td>
+                                                    <td class="view-message"><%= subject%></td>
                                                     <td class="view-message"> </td>
-                                                    <% } %>
                                                 </tr>
                                                 <%
                                                     }
                                                 %>
+
                                             </tbody>
                                         </table>
-                                            <table border="1" cellpadding="5" cellspacing="5">
+                                                <table border="1" cellpadding="5" cellspacing="5">
                                             <tr>
                                                 <c:forEach begin="1" end="${noOfPages}" var="i">
                                                     <c:choose>
@@ -205,7 +207,7 @@
                                                         </c:when>
                                                         <c:otherwise>
                                                             <td>
-                                                                <c:url var="linkHref" value="/Controller?action=message&page=${i}" />
+                                                                <c:url var="linkHref" value="/BackController?action=bulletinBoard&page=${i}" />
 
                                                                 <a href="${linkHref}">${i}</a></td>
                                                             </c:otherwise>
@@ -283,5 +285,3 @@
 
 
 </html>
-
-

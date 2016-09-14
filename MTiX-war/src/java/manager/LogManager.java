@@ -6,6 +6,7 @@
 package manager;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -17,11 +18,20 @@ import java.util.logging.SimpleFormatter;
 public class LogManager {
 
     Logger logger = Logger.getLogger("MyLog");
-    FileHandler fh = new FileHandler("C:/Users/Student-ID/Desktop/Project/MTiXFile.log");
+    FileHandler fh;
 
     public LogManager() throws IOException {
         try {
-            
+            StringBuffer sb = new StringBuffer();
+            char[] chars = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+            Random random = new Random();
+            for (int i = 1; i <= 2; i++) {
+                sb.append(chars[random.nextInt(chars.length)]);
+            }           
+            String newFileName = new String(sb);
+            newFileName = "C:/Users/Student-ID/Desktop/Project/MTiXFile" + newFileName + ".log";
+            fh = new FileHandler(newFileName);
+            System.out.println("log file name: " + newFileName);
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);

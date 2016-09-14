@@ -128,6 +128,7 @@ public class MessageSession implements MessageSessionLocal {
                 message.add(Long.toString(m.getId()));
                 message.add(m.getSender());
                 message.add(m.getSubject());
+                message.add(m.getStatus());
                 inbox.add(message);
             }
             return inbox;
@@ -139,7 +140,10 @@ public class MessageSession implements MessageSessionLocal {
     public ArrayList<String> retrieveMessage(String id) {
         ArrayList<String> message = new ArrayList();
         Query q = entityManager.createQuery("SELECT m FROM MessageEntity m WHERE m.id = " + id);
-
+        
+        Query q2 = entityManager.createQuery("UPDATE MessageEntity m SET m.status = " +"'read'"+" WHERE m.id = " +id);
+        q2.executeUpdate();
+        
         for (Object o : q.getResultList()) {
             MessageEntity m = (MessageEntity) o;           
             message.add(m.getSender());

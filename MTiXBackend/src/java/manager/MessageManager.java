@@ -38,7 +38,7 @@ public class MessageManager {
     }
     
     public ArrayList<ArrayList<String>> getInbox(String username) {
-        ArrayList<ArrayList<String>> inbox = messageSessionLocal.retrieveInbox(username);
+         ArrayList<ArrayList<String>> inbox = messageSessionLocal.retrieveInbox(username);
         ArrayList<ArrayList<String>> arrangedInbox = new ArrayList();
         int size = inbox.size();
         size--;

@@ -1,11 +1,10 @@
 <%-- 
-    Document   : home
-    Created on : Aug 28, 2016, 12:55:08 PM
+    Document   : compose
+    Created on : Sep 9, 2016, 9:55:19 PM
     Author     : Student-ID
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
@@ -16,7 +15,7 @@
         <link rel="icon" type="image/png" href="assets/img/favicon.ico">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-        <title>MTiX Home Page</title>
+        <title>Compose New Message</title>
 
         <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
         <meta name="viewport" content="width=device-width" />
@@ -44,8 +43,10 @@
     </head>
     <body>
 
+        <c:url var="formAction" value="/BackController?action=createMessage" />
+
         <div class="wrapper">
-            <div class="sidebar" data-color="azure" data-image="assets/img/sidebar-5.jpg">
+            <div class="sidebar" data-color="orange" data-image="assets/img/sidebar-5.jpg">
 
                 <!--
             
@@ -56,21 +57,26 @@
 
                 <div class="sidebar-wrapper">
                     <div class="logo">
-                        <p ><%= request.getAttribute("username") %> </p>
+                        <p ><%= request.getAttribute("username")%> </p>
                     </div>
 
                     <ul class="nav">
-                        <li class="active">
-                            <a href="dashboard.html">
-                                <i class="pe-7s-graph"></i>
-                                <p>My Cart</p>
-                            </a>
-                        </li>
+                    
                         <li>
                             <a href="user.html">
                                 <i class="pe-7s-user"></i>
                                 <p>User Profile</p>
                             </a>
+                        </li>
+                        <li>
+                           <c:if test="${role == 'super administrator'}">
+
+                                <c:url var="linkHref" value="/BackController?action=createAccount" />
+                                <a  href="${linkHref}">
+                                    <i class="pe-7s-user"></i>
+                                    <p>Create Account</p>
+                                </a>
+                            </c:if>
                         </li>
 
                     </ul>
@@ -87,12 +93,14 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" href="#">MTiX</a>
+                            <c:url var="linkHref" value="/BackController?action=home" />
+                            <a class="navbar-brand" href="${linkHref}">Home</a>
                         </div>
                         <div class="collapse navbar-collapse">
 
 
                             <ul class="nav navbar-nav navbar-right">
+
 
                                 <li>
                                     <a href="#">
@@ -108,41 +116,37 @@
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="header">
-                                        <c:url var="linkHref" value="/Controller?action=message" />
-                                        <a class="title" href="${linkHref}">Messages</a>
-                                        
-                                    </div>
-                                    <div class="content">
-                                        <div><img src="assets/img/faces/mail-box.jpg" /></div>
 
-                                        <div class="footer">
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-clock-o"></i> Inbox updated
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                            <c:if test="${missend == 'true'}">
+                                <font color="red">Account to which message is to be sent does not exist!</font><br/>
+                            </c:if>
+                            <c:if test="${sent == 'true'}">
+                                <font color="red">Message successfully sent!</font><br/>
+                            </c:if>
                             <div class="col-md-8">
                                 <div class="card">
                                     <div class="header">
-                                        <c:url var="linkHref" value="/Controller?action=buyTickets" />
-                                        <a class="title" href="${linkHref}">Buy Tickets</a>
+                                        <h4 class="title">Compose New Message</h4>   
                                     </div>
-                                    <div class="content">
-                                        <div><img src="assets/img/faces/buytickets.jpg" /></div>
-                                        <div class="footer">
-                                            
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-history"></i> Updated 3 minutes ago
+                                    <div class="content">             
+                                        <form id="contact_form" action="${formAction}" method="POST">
+                                            <div class="row">
+                                                <label for="name">To:</label><br />
+                                                <input id="to" class="input" name="to" type="text" value="" size="30" /><br />
                                             </div>
-                                        </div>
+                                            <div class="row">
+                                                <label for="email">Subject:</label><br />
+                                                <input id="subject" class="input" name="subject" type="text" value="" size="30" /><br />
+                                            </div>
+                                            <div class="row">
+                                                <label for="message">Your message:</label><br />
+                                                <textarea id="message" class="input" name="message" rows="7" cols="30"></textarea><br />
+                                            </div>
+                                            <input type="hidden" name="username" value=<%= request.getAttribute("username")%> readonly="readonly" />
+                                            <c:url var="formAction" value="/BackController" />
+                                            <input type="submit" value="Send message" />
+                                        </form>						
+
                                     </div>
                                 </div>
                             </div>
@@ -150,51 +154,7 @@
 
 
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card ">
-                                    <div class="header">
-                                        <c:url var="linkHref" value="/Controller?action=bulletinBoard" />
-                                        <a class="title" href="${linkHref}">Bulletin Board</a>
-                                    </div>
-                                    <div class="content">
-                                        <div><img src="assets/img/faces/bulletinboard.jpg" /></div>
 
-                                        <div class="footer">
-                                           
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-check"></i> Bulletin board updated
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="card ">
-                                    <div class="header">
-                                        <c:url var="linkHref" value="/Controller?action=testTable" />
-                                        <a class="title" href="${linkHref}">My Finances</a>
-                                    </div>
-                                    
-                                         <div class="content">
-                                        <div><img src="assets/img/faces/myfinances.jpg" /></div>
-
-                                     
-                                    </div>
-                                        
-
-                                        <div class="footer">
-                                            <hr>
-                                            <div class="stats">
-                                                <i class="fa fa-history"></i> Credit card information entered
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -218,7 +178,7 @@
                             </ul>
                         </nav>
                         <p class="copyright pull-right">
-                            &copy; 2016 , MTIC
+                            &copy; 2016 MTIC
                         </p>
                     </div>
                 </footer>
@@ -251,8 +211,6 @@
     <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
     <script src="assets/js/demo.js"></script>
 
-    
+
 
 </html>
-
-
