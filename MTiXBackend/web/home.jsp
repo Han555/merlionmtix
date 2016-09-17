@@ -88,7 +88,7 @@
 
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="assets/img/faces/myfinances.jpg" alt="theater_main" style="width:300 px;height:300px">
+                    <img src="assets/img/faces/finances.jpg" alt="theater_main" style="width:300 px;height:300px">
                     <div class="caption">
                         <h3 style="text-align: center">Finances</h3>
                         <p><c:url var="linkHref" value="/Controller?action=concertHallLayout" /><a href="${linkHref}" class="btn btn-primary" role="button">Enter</a> </p>
