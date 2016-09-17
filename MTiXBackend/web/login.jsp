@@ -13,7 +13,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="assets/css/style.css" rel="stylesheet">
+        <link href="assets/css/login/style.css" rel="stylesheet">
 
         <title>MTiX Backend Login</title>
         <% response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 

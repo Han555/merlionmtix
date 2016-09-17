@@ -119,7 +119,7 @@ public class BackController extends HttpServlet {
                         if (lockManager.passThrough(username)) {
                             role = loginManager.getRoles(username);
                             System.out.println("role: " + role);
-                            if (loginManager.getRoles(username).equals("super administrator") || loginManager.getRoles(username).equals("property manager")) {
+                            if (loginManager.getRoles(username).equals("super administrator") || loginManager.getRoles(username).equals("property manager") || loginManager.getRoles(username).equals("product manager")) {
                                 System.out.println("here new 1");
                                 logManager.logMessage(username + " logged in.");
                                 currentUser = username;
@@ -139,7 +139,7 @@ public class BackController extends HttpServlet {
                             System.out.println("here 4");
                             role = loginManager.getRoles(username);
                             System.out.println("role: " + role);
-                            if (loginManager.getRoles(username).equals("super administrator") || loginManager.getRoles(username).equals("property manager")) {
+                            if (loginManager.getRoles(username).equals("super administrator") || loginManager.getRoles(username).equals("property manager") || loginManager.getRoles(username).equals("product manager")) {
                                 System.out.println("here new 1");
                                 logManager.logMessage(username + " logged in.");
                                 currentUser = username;
@@ -342,6 +342,7 @@ public class BackController extends HttpServlet {
                 request.setAttribute("currentPage", page);
                 request.setAttribute("board", boardPage);
                 request.setAttribute("username", currentUser);
+                request.setAttribute("role", role);
                 request.getRequestDispatcher("/bulletinBoard.jsp").forward(request, response);
             } else if (action.equals("composeBulletin")) {
                 request.setAttribute("role", role);
