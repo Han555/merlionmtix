@@ -5,9 +5,16 @@
  */
 package servlet;
 
+import PropertyManagement.ReservePropertyBeanLocal;
+import PropertyManagement.SeatingPlanManagementBeanLocal;
+import entity.Property;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,13 +26,17 @@ import manager.LockManager;
 import manager.LogManager;
 import manager.LoginManager;
 import manager.MessageManager;
+import manager.ProductManager;
 import manager.RegisterManager;
+import manager.ReservationManager;
 import manager.ResetPasswordManager;
+import manager.SeatingPlanManager;
 import manager.UnlockManager;
 import session.stateless.BulletinSessionLocal;
 import session.stateless.LockAccountSessionLocal;
 import session.stateless.LoginSessionLocal;
 import session.stateless.MessageSessionLocal;
+import session.stateless.ProductSessionLocal;
 import session.stateless.RegisterSessionLocal;
 import session.stateless.ResetPasswordSessionLocal;
 import session.stateless.UnlockAccountSessionLocal;
@@ -36,6 +47,14 @@ import session.stateless.UnlockAccountSessionLocal;
  */
 @WebServlet(name = "BackController", urlPatterns = {"/BackController", "/BackController?*"})
 public class BackController extends HttpServlet {
+    
+    @EJB
+    SeatingPlanManagementBeanLocal seatingPlanManagementBeanLocal;
+
+    @EJB
+    ReservePropertyBeanLocal reservePropertyBeanLocal;
+    @EJB
+    private ProductSessionLocal productSession;
 
     @EJB
     private BulletinSessionLocal bulletinSession;
@@ -79,7 +98,10 @@ public class BackController extends HttpServlet {
             RegisterManager registerManager = new RegisterManager(registerSession);
             MessageManager messageManager = new MessageManager(messageSession);
             BulletinManager bulletinManager = new BulletinManager(bulletinSession);
-                       
+            ProductManager productManager = new ProductManager(productSession);
+            SeatingPlanManager spm = new SeatingPlanManager(seatingPlanManagementBeanLocal);
+            ReservationManager rm = new ReservationManager(reservePropertyBeanLocal);
+
             int page = 1;
             int recordsPerPage = 8;
             String action;
@@ -315,7 +337,7 @@ public class BackController extends HttpServlet {
                 messageManager.sendMessage(request.getParameter("username"), request.getParameter("receiver"), subject, request.getParameter("reply"));
                 request.setAttribute("reply", "true");
                 request.setAttribute("role", role);
-                
+
                 if (request.getParameter("page") != null) {
                     page = Integer.parseInt(request.getParameter("page"));
                 }
@@ -352,8 +374,8 @@ public class BackController extends HttpServlet {
                 request.setAttribute("role", role);
                 bulletinManager.releaseMessage(request.getParameter("message"), request.getParameter("subject"));
                 request.setAttribute("created", "true");
-                
-                 if (request.getParameter("page") != null) {
+
+                if (request.getParameter("page") != null) {
                     page = Integer.parseInt(request.getParameter("page"));
                 }
                 ArrayList<ArrayList<String>> board = bulletinManager.getBoard();
@@ -372,7 +394,305 @@ public class BackController extends HttpServlet {
                 request.setAttribute("username", currentUser);
                 request.setAttribute("message", message);
                 request.getRequestDispatcher("/readBulletin.jsp").forward(request, response);
-            }
+            } else if (action.equals("productMain")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/productMain.jsp").forward(request, response);
+            } else if (action.equals("propertyMain")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/propertyMain.jsp").forward(request, response);
+            } else if (action.equals("sessionMain")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/sessionMain.jsp").forward(request, response);
+            } else if (action.equals("promotionMain")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/promotionOptions.jsp").forward(request, response);
+            } else if (action.equals("editPromo")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/editPromotionMain.jsp").forward(request, response);
+            } else if (action.equals("configuration")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/configuration.jsp").forward(request, response);
+            } else if (action.equals("createSessionMain")) {
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/createSessionMain.jsp").forward(request, response);
+            } else if (action.equals("testCreateEvent")) {
+                request.getRequestDispatcher("/testCreateEvent.jsp").forward(request, response);
+            } else if (action.equals("createEvent")) {
+                productManager.createEvent(request);
+                request.setAttribute("created", "true");
+                request.getRequestDispatcher("/testCreateEvent.jsp").forward(request, response);
+            } else if (action.equals("createSession")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                String info = request.getParameter("id");
+                System.out.println(info);
+                String[] idType = info.split(" ");
+                Long id = Long.valueOf(idType[0]);
+                int no = Integer.valueOf(request.getParameter("no"));
+                ArrayList data = productSession.getSessionEvent(idType[1], id, no);
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/createSession.jsp").forward(request, response);
+            } else if (action.equals("sessionCreated")) {
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                int errorChecking = productManager.createSession(request);
+
+                if (errorChecking == 0) {
+                    request.setAttribute("error", "true");
+                    request.getRequestDispatcher("/createSessionMain.jsp").forward(request, response);
+                } else {
+                    request.setAttribute("success", "true");
+                    request.getRequestDispatcher("/createSessionMain.jsp").forward(request, response);
+                }
+            } else if (action.equals("deleteMain")) {
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/deleteMain.jsp").forward(request, response);
+            } else if (action.equals("deleteSelectSession")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                String info = request.getParameter("id");
+                System.out.println(info);
+                String[] idType = info.split(" ");
+                Long i = Long.valueOf(idType[0]);
+                List<ArrayList> data = productSession.searchEventSessions(i, idType[1]);
+                request.setAttribute("eventType", idType[1]);
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/deleteSelectSession.jsp").forward(request, response);
+            } else if (action.equals("sessionDeleted")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                String[] id = request.getParameterValues("id");
+                productSession.deleteSessions(id);
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("data", data);
+                request.setAttribute("deleteSuccess", "true");
+                request.getRequestDispatcher("/deleteMain.jsp").forward(request, response);
+            } else if (action.equals("editMain")) {
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/editMain.jsp").forward(request, response);
+            } else if (action.equals("editSelectSessions")) {
+                String info = request.getParameter("id");
+                System.out.println(info);
+                String[] idType = info.split(" ");
+                Long i = Long.valueOf(idType[0]);
+                List<ArrayList> data = productSession.searchEventSessions(i, idType[1]);
+                request.setAttribute("eventType", idType[1]);
+                request.setAttribute("data", data);
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/editSelectSessions.jsp").forward(request, response);
+            } else if (action.equals("editSessions")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                Long i = Long.valueOf(request.getParameter("id"));
+                String type = request.getParameter("type");
+                ArrayList data = productSession.editSessions(i, type);
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/editSessions.jsp").forward(request, response);
+            } else if (action.equals("sessionEdited")) {
+                //ArrayList data = this.editSession(request);
+                ArrayList data = productManager.editSession(request);
+                int errorcode = productSession.writeSession(data);
+
+                List<ArrayList> data2 = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data2);
+                if (errorcode == 0) {
+                    request.setAttribute("error", "true");
+                    request.getRequestDispatcher("/editMain.jsp").forward(request, response);
+                } else {
+                    request.setAttribute("success", "true");
+                    request.getRequestDispatcher("/editMain.jsp").forward(request, response);
+                }
+            } else if (action.equals("promotionCreated")) {
+                String[] id;
+                String type = request.getParameter("type");
+                if (type.equals("3")) {
+                    String info = request.getParameter("id");
+                    id = new String[1];
+                    id[0] = info;
+                } else {
+                    id = request.getParameterValues("id");
+                }
+                String name2 = request.getParameter("name");
+                double discount = Double.valueOf(request.getParameter("discount"));
+                String requirement = request.getParameter("requirement");
+                String desc = request.getParameter("description");
+                productSession.setPromotion_1(id, type, name2, discount, requirement, desc);
+            } else if (action.equals("setPromotion")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/promotionMain.jsp").forward(request, response);
+            } else if (action.equals("promotion")) {
+                System.out.println("Entered promotion");
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                String type = request.getParameter("type");
+                request.setAttribute("type", type);
+                System.out.println("Type: " + type);
+                if (type.equals("3")) {
+                    request.getRequestDispatcher("/promotion_ticketMain.jsp").forward(request, response);
+                } else if (type.equals("6")) {
+                    request.getRequestDispatcher("/promotion_Customization.jsp").forward(request, response);
+                }
+            } else if ("promotionCreated".equals(page)) {
+                String[] id;
+                String type = request.getParameter("type");
+                if (type.equals("3")) {
+                    String info = request.getParameter("id");
+                    id = new String[1];
+                    id[0] = info;
+                } else {
+                    id = request.getParameterValues("id");
+                }
+                String name2 = request.getParameter("name");
+                double discount = Double.valueOf(request.getParameter("discount"));
+                String requirement = request.getParameter("requirement");
+                String desc = request.getParameter("description");
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("promoteCreated", "true");
+                productSession.setPromotion_1(id, type, name2, discount, requirement, desc);
+                request.getRequestDispatcher("/promotionMain.jsp").forward(request, response);
+            } else if (action.equals("promotion_ticket")) {
+                String info = request.getParameter("id");
+                System.out.println(info);
+                String[] idType = info.split(" ");
+                Long i = Long.valueOf(idType[0]);
+                String promotionType = request.getParameter("type");
+                int category = productSession.getCategory(i, idType[1]);
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("type", promotionType);
+                request.setAttribute("info", info);
+                request.setAttribute("category", category);
+                request.getRequestDispatcher("/promotion_ticket.jsp").forward(request, response);
+            } else if (action.equals("promotionCreated_Customization")) {
+                String[] type = request.getParameterValues("type");
+                String[] id = request.getParameterValues("id");
+                String name2 = request.getParameter("name");
+                double discount = Double.valueOf(request.getParameter("discount"));
+                String requirement = request.getParameter("requirement");
+                String desc = request.getParameter("description");
+                productSession.setPromotion_3(type, id, name2, discount, requirement, desc);
+
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("customized", "true");
+                request.getRequestDispatcher("/promotionMain.jsp").forward(request, response);
+
+            } else if (action.equals("editSelectPromotion")) {
+                String info = request.getParameter("id");
+                String[] idType = info.split(" ");
+                Long i = Long.valueOf(idType[0]);
+                List<ArrayList> data = productSession.searchEventPromotion(i, idType[1]);
+                request.setAttribute("eventType", idType[1]);
+                request.setAttribute("data", data);
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/editSelectPromotion.jsp").forward(request, response);
+            } else if (action.equals("editPromotion")) {
+                Long i = Long.valueOf(request.getParameter("id"));
+                String type = request.getParameter("type");
+                ArrayList data = productSession.editPromotion(i, type);
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+            } else if (action.equals("promotionEdited")) {
+                productManager.editPromotion(request);
+                String info = request.getParameter("id");
+                String[] idType = info.split(" ");
+                Long i = Long.valueOf(idType[0]);
+                List<ArrayList> data = productSession.searchEventPromotion(i, idType[1]);
+                request.setAttribute("eventType", idType[1]);
+                request.setAttribute("data", data);
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("edited", "true");
+                request.getRequestDispatcher("/editSelectPromotion.jsp").forward(request, response);
+            } else if (action.equals("deletePromotionMain")) {
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/deletePromotionMain.jsp").forward(request, response);
+            } else if (action.equals("deleteSelectPromotion")) {
+                String info = request.getParameter("id");
+                String[] idType = info.split(" ");
+                Long i = Long.valueOf(idType[0]);
+                List<ArrayList> data = productSession.searchEventPromotion(i, idType[1]);
+                request.setAttribute("data", data);
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/deleteSelectPromotion.jsp").forward(request, response);
+            } else if (action.equals("promotionDeleted")) {
+                String[] id = request.getParameterValues("id");
+                productSession.deletePromotion(id);
+
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.setAttribute("deleted", true);
+                request.getRequestDispatcher("/deletePromotionMain.jsp").forward(request, response);
+            } else if(action.equals("viewAllProperty")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/viewAllProperty.jsp").forward(request, response);
+            } else if(action.equals("concertHallLayout")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/concertHallLayout.jsp").forward(request, response);
+            } else if(action.equals("reservationSearch")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/reservationSearch.jsp").forward(request, response);
+            } else if(action.equals("reservationSearchResult")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                try {
+                    List<Property> properties = rm.getReservationSearchResult(request);
+                    List<Property> pRList = rm.checkRecommendation(properties, request);
+                    request.setAttribute("pList", properties);
+                    request.setAttribute("pRList", pRList);
+                    request.getRequestDispatcher("/reservationSearchResult.jsp").forward(request, response);
+                } catch (ParseException ex) {
+                    Logger.getLogger(BackController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                request.getRequestDispatcher("/reservationSearch.jsp").forward(request, response);
+            } else if(action.equals("concertHallSelected")){
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/concertHallSelected.jsp").forward(request, response);
+            } else if (action.equals("maintenance")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("properties", spm.getAllProperties());
+                request.getRequestDispatcher("/maintenance.jsp").forward(request, response);
+            } 
+            
         } catch (Exception ex) {
             ex.printStackTrace();
             //request.getRequestDispatcher("/error.jsp").forward(request, response);

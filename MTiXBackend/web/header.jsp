@@ -22,11 +22,12 @@
     <link rel="stylesheet" type="text/css" href="lib/css/jquery.seat-charts.css">
     <!-- CSS App -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css">
     <link rel="stylesheet" type="text/css" href="css/themes/flat-blue.css">
     
     <!-- Javascript Libs -->
             <script type="text/javascript" src="lib/js/jquery.min.js"></script>
-            <script type="text/javascript" src="lib/js/animatedModal.js"></script>
+          <script type="text/javascript" src="lib/js/animatedModal.js"></script>
             <script type="text/javascript" src="lib/js/bootstrap.min.js"></script>
             <script type="text/javascript" src="lib/js/jquery.seat-charts.js"></script>
             <script type="text/javascript" src="lib/js/Chart.min.js"></script>
@@ -41,8 +42,10 @@
             <!-- Javascript -->
             
             <script type="text/javascript" src="js/app.js"></script>
-            <script type="text/javascript" src="js/index.js"></script>
-            <script type="text/javascript" src="js/modal.js"></script>
+          <!--  <script type="text/javascript" src="js/index.js"></script> -->
+            <script type="text/javascript" src="js/moment.min.js"></script>
+         <!--   <script type="text/javascript" src="js/modal.js"></script> -->
+            <script type="text/javascript" src="js/daterangepicker.js"></script>
 </head>
 
 <body class="flat-blue">
