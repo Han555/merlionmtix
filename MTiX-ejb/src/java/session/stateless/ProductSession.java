@@ -42,7 +42,7 @@ public class ProductSession implements ProductSessionLocal {
     
     @Override
     public void generateUser() {
-        for (int i = 0; i < 10; i++) {
+        /*for (int i = 0; i < 10; i++) {
             user = new UserEntity();
             user.createAccount("name" + i, "password" + i, "salt" + i, "9847345" + i);
             em.persist(user);
@@ -55,7 +55,7 @@ public class ProductSession implements ProductSessionLocal {
             section.createSectionCategory("CAT" + i, i);
             em.persist(section);
             em.flush();
-        }
+        }*/
 
         PromotionType promotionType = new PromotionType();
         promotionType.setName("Credit Card");
@@ -178,6 +178,7 @@ public class ProductSession implements ProductSessionLocal {
 
     @Override
     public int createSession(String name, ArrayList<Date> start, ArrayList<Date> end, String description, String type, Long id) {
+        
 
         Integer errorChecking;
         if (type.equals("event")) {

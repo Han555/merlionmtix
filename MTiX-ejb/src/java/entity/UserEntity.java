@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,10 +34,26 @@ public class UserEntity implements Serializable {
     private ArrayList<String> roles;
     
     @OneToMany(mappedBy="user")
-    private Collection<SubEvent> subEvents = new ArrayList<SubEvent>();
+    private List<SubEvent> subEvents = new ArrayList<SubEvent>();
     
     @OneToMany(mappedBy="user")
-    private Collection<Event> events = new ArrayList<Event>();
+    private List<Event> events = new ArrayList<Event>();
+
+    public List<SubEvent> getSubEvents() {
+        return subEvents;
+    }
+
+    public void setSubEvents(List<SubEvent> subEvents) {
+        this.subEvents = subEvents;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
 
     public UserEntity() {
     }
@@ -69,21 +86,7 @@ public class UserEntity implements Serializable {
         this.roles = roles;
     }
 
-    public Collection<SubEvent> getSubEvents() {
-        return subEvents;
-    }
-
-    public void setSubEvents(Collection<SubEvent> subEvents) {
-        this.subEvents = subEvents;
-    }
-
-    public Collection<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(Collection<Event> events) {
-        this.events = events;
-    }
+    
 
     public boolean isFirstLogin() {
         return firstLogin;

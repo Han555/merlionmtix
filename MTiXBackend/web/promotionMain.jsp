@@ -32,6 +32,9 @@
                     <c:if test="${promotionCreated == 'true'}">
                         <font color="red">Promotion Created Successfully!!</font><br/>
                     </c:if>
+                    <c:if test="${promotionCreated1245 == 'true'}">
+                        <font color="red">Promotion Created Successfully!!</font><br/>
+                    </c:if>
                     <form id="contact_form" action="${formAction}" method="POST">
 
                         <table align="center">

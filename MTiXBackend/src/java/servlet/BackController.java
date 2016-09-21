@@ -47,7 +47,7 @@ import session.stateless.UnlockAccountSessionLocal;
  */
 @WebServlet(name = "BackController", urlPatterns = {"/BackController", "/BackController?*"})
 public class BackController extends HttpServlet {
-    
+
     @EJB
     SeatingPlanManagementBeanLocal seatingPlanManagementBeanLocal;
 
@@ -539,6 +539,8 @@ public class BackController extends HttpServlet {
                 String requirement = request.getParameter("requirement");
                 String desc = request.getParameter("description");
                 productSession.setPromotion_1(id, type, name2, discount, requirement, desc);
+                request.setAttribute("promotionCreated1245", "true");
+                request.getRequestDispatcher("/promotionMain.jsp").forward(request, response);
             } else if (action.equals("setPromotion")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
@@ -556,6 +558,8 @@ public class BackController extends HttpServlet {
                     request.getRequestDispatcher("/promotion_ticketMain.jsp").forward(request, response);
                 } else if (type.equals("6")) {
                     request.getRequestDispatcher("/promotion_Customization.jsp").forward(request, response);
+                } else {
+                    request.getRequestDispatcher("/promotion.jsp").forward(request, response);
                 }
             } else if ("promotionCreated".equals(page)) {
                 String[] id;
@@ -620,10 +624,11 @@ public class BackController extends HttpServlet {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.setAttribute("data", data);
+                request.getRequestDispatcher("/editPromotion.jsp").forward(request, response);
             } else if (action.equals("promotionEdited")) {
                 productManager.editPromotion(request);
-                String info = request.getParameter("id");
-                String[] idType = info.split(" ");
+                String id = request.getParameter("eventId").toString() + " " + request.getParameter("eventType");
+                String[] idType = id.split(" ");
                 Long i = Long.valueOf(idType[0]);
                 List<ArrayList> data = productSession.searchEventPromotion(i, idType[1]);
                 request.setAttribute("eventType", idType[1]);
@@ -657,19 +662,19 @@ public class BackController extends HttpServlet {
                 request.setAttribute("data", data);
                 request.setAttribute("deleted", true);
                 request.getRequestDispatcher("/deletePromotionMain.jsp").forward(request, response);
-            } else if(action.equals("viewAllProperty")) {
+            } else if (action.equals("viewAllProperty")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/viewAllProperty.jsp").forward(request, response);
-            } else if(action.equals("concertHallLayout")) {
+            } else if (action.equals("concertHallLayout")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/concertHallLayout.jsp").forward(request, response);
-            } else if(action.equals("reservationSearch")) {
+            } else if (action.equals("reservationSearch")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/reservationSearch.jsp").forward(request, response);
-            } else if(action.equals("reservationSearchResult")) {
+            } else if (action.equals("reservationSearchResult")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 try {
@@ -682,7 +687,7 @@ public class BackController extends HttpServlet {
                     Logger.getLogger(BackController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 request.getRequestDispatcher("/reservationSearch.jsp").forward(request, response);
-            } else if(action.equals("concertHallSelected")){
+            } else if (action.equals("concertHallSelected")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.getRequestDispatcher("/concertHallSelected.jsp").forward(request, response);
@@ -691,8 +696,10 @@ public class BackController extends HttpServlet {
                 request.setAttribute("username", currentUser);
                 request.setAttribute("properties", spm.getAllProperties());
                 request.getRequestDispatcher("/maintenance.jsp").forward(request, response);
-            } 
-            
+            } else if (action.equals("generateUser")) {
+                productSession.generateUser();
+            }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             //request.getRequestDispatcher("/error.jsp").forward(request, response);

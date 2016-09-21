@@ -30,7 +30,7 @@
     <div class="side-body padding-top">
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     
                     <div class="header">
