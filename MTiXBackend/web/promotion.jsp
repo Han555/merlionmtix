@@ -43,7 +43,7 @@
                     <td>&nbsp</td>                     
                 </tr>
                 <tr>
-                    <td align="right">Promotion Name : </td>
+                    <td align="right">Promotion Name : &nbsp</td>
                     <td align="left"><input type="text" name="name" required="true" class="form-control"></td>
                 </tr>
                 <tr>
@@ -51,7 +51,7 @@
                     <td>&nbsp</td>                     
                 </tr>
                 <tr>
-                    <td align="right">Discount Rate(%) : </td>
+                    <td align="right">Discount Rate(%) : &nbsp</td>
                     <td align="left"><input type="number" name="discount" min="1" max="100" required="true" class="form-control"></td>
                 </tr>
                 <tr>
@@ -61,7 +61,7 @@
                 <%if (type.equals("1")) {
                 %>
                 <tr>
-                    <td align="right">Credit Card : </td>
+                    <td align="right">Credit Card : &nbsp</td>
                     <td>
                         <select class="form-control" name="requirement" required="true">
                             <option value="American Express Card">American Express Card</option>
@@ -79,7 +79,7 @@
                 </tr>
                 <%} else if (type.equals("2")){ %>
                  <tr>
-                    <td align="right">Membership Required : </td>
+                    <td align="right">Membership Required : &nbsp</td>
                     <td align="left"><input type="text" name="requirement" required="true" class="form-control"></td>
                 </tr> 
                 <tr>
@@ -88,7 +88,7 @@
                 </tr>
                 <%} else if (type.equals("4")){ %>
                  <tr>
-                    <td align="right">Volume Required : </td>
+                    <td align="right">Volume Required : &nbsp</td>
                     <td align="left"><input type="number" name="requirement" min="1" required="true" class="form-control"></td>
                  </tr>
                  <tr>
@@ -100,7 +100,7 @@
                      <td align="left"><input type="text" hidden="true" value="null" name="requirement" required="true"></td>
                 </tr><%}%>
                 <tr>
-                    <td align="right">Description : </td>
+                    <td align="right">Description : &nbsp</td>
                     <td align="left"><input type="text" name="description" required="true" class="form-control"></td>
                 </tr>
                 <tr>

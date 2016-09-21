@@ -69,7 +69,7 @@
                                 </table>
                                 <table align="center">
                                     <tr>
-                                        <td align="right">No of Sessions : </td>
+                                        <td align="right">No of Sessions : &nbsp</td>
                                         <td align="left"><input type="number" name="no" min="1" max="3" required="true"</td>              
                                     </tr>
                                     <tr>

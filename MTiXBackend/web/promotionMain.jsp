@@ -43,7 +43,7 @@
                                 <td>&nbsp</td>                     
                             </tr>
                             <tr>
-                                <td align="right">Promotion Type</td>
+                                <td align="right">Promotion Type : &nbsp</td>
                                 <td align="left">
                                     <select class="form-control" name="type" required="true">
                                         <option value="1">Credit Card</option>

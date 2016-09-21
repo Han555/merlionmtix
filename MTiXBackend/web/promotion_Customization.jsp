@@ -38,7 +38,7 @@
                     <td>&nbsp</td>                     
                 </tr>
                 <tr>
-                    <td align="right">Promotion Name : </td>
+                    <td align="right">Promotion Name : &nbsp</td>
                     <td align="left"><input type="text" name="name" required="true" class="form-control"></td>
                 </tr>
                 <tr>
@@ -46,7 +46,7 @@
                     <td>&nbsp</td>                     
                 </tr>
                 <tr>
-                    <td align="right">Discount Rate(%) : </td>
+                    <td align="right">Discount Rate(%) : &nbsp</td>
                     <td align="left"><input type="number" name="discount" min="1" max="100" required="true" class="form-control"></td>
                 </tr>
                 <tr>
@@ -54,7 +54,7 @@
                     <td>&nbsp</td>                     
                 </tr>
                 <tr>
-                    <td align="right">Description : </td>
+                    <td align="right">Description : &nbsp</td>
                     <td align="left"><input type="text" name="description" required="true" class="form-control"></td>
                 </tr>
                 <tr>
@@ -62,7 +62,7 @@
                     <td>&nbsp</td>                     
                 </tr>
                 <tr>
-                    <td align="right">Requirements : </td>
+                    <td align="right">Requirements : &nbsp</td>
                     <td align="left"><input type="text" name="requirement" min="1" required="true" class="form-control"></td>
                  </tr>
                  <tr>
@@ -70,7 +70,7 @@
                     <td>&nbsp</td>                     
                 </tr>
                 <tr>
-                    <td align="right">Promotion Type : </td>
+                    <td align="right">Promotion Type : &nbsp</td>
                     <td>
                         <select name="type" required="true" multiple>
                             <option value="1">Credit Card</option>

@@ -59,10 +59,10 @@ public class PMSServlet extends HttpServlet {
         } else if ("signInCompleted".equals(page)) {
             String name = request.getParameter("name");
             String password = request.getParameter("password");
-            Long userID = session.signIn(name, password);
+            //Long userID = session.signIn(name, password);
 
             httpSession = request.getSession();
-            httpSession.setAttribute("user", userID);//userName will be stored as user
+           // httpSession.setAttribute("user", userID);//userName will be stored as user
             response.reset();
             httpSession = request.getSession();
             System.out.print(httpSession.getAttribute("user").toString());
@@ -149,7 +149,7 @@ public class PMSServlet extends HttpServlet {
             double cat1 = Double.valueOf(request.getParameter("cat1"));
             double cat2 = Double.valueOf(request.getParameter("cat2"));
             double cat3 = Double.valueOf(request.getParameter("cat3"));
-            session.setPricing(i, cat1, cat2, cat3, apply);
+            //session.setPricing(i, cat1, cat2, cat3, apply);
         } else if ("promotion".equals(page)) {
             List<ArrayList> data = session.getEventList();
             request.setAttribute("data", data);

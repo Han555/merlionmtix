@@ -14,9 +14,12 @@
     <div class="container"> 
         <div class="page-title">
             <span class="title">Product Management System</span>
+            
+              
         </div>
 
         <div class="row">
+            <h5>Enter Event Organizer : &nbsp<input type="text" name="id" required="true" class="form-control"></h5>  
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
                     <img src="img/session.jpg" alt="concert_main" style="width:300 px;height:300px">
@@ -31,7 +34,7 @@
                     <img src="img/seatallocation.jpg" alt="theater_main" style="width:300 px;height:300px">
                     <div class="caption">
                         <h3 style="text-align: center">Seat Configuration</h3>
-                        <p><c:url var="linkHref" value="/BackController?action=configuration" /><a href="${linkHref}" class="btn btn-primary" role="button">Enter</a> </p>
+                        <p><c:url var="linkHref" value="/BackController?action=displaySeatsMain" /><a href="${linkHref}" class="btn btn-primary" role="button">Enter</a> </p>
                     </div>
                 </div>
             </div>

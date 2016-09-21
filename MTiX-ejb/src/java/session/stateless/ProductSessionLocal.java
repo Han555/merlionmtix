@@ -32,13 +32,13 @@ public interface ProductSessionLocal {
 
     public ArrayList getSessionEvent(String type, Long id, int no);
 
-    public int setPricing(Long id, Double cat1, Double cat2, Double cat3, String apply);
+    public int setPricing(Long id, ArrayList<Double> cat, int no, String apply);
 
     public ArrayList getPricing(Long id);
 
     public void generateUser();
 
-    public Long signIn(String name, String password);
+    public Long signIn(String name);
 
     public List<ArrayList> getEventList();
 

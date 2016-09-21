@@ -405,6 +405,8 @@ public class BackController extends HttpServlet {
             } else if (action.equals("sessionMain")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
+                String email = request.getParameter("id");
+              //  productSession.signIn(email);
                 request.getRequestDispatcher("/sessionMain.jsp").forward(request, response);
             } else if (action.equals("promotionMain")) {
                 request.setAttribute("role", role);
@@ -698,6 +700,41 @@ public class BackController extends HttpServlet {
                 request.getRequestDispatcher("/maintenance.jsp").forward(request, response);
             } else if (action.equals("generateUser")) {
                 productSession.generateUser();
+            } else if (action.equals("displaySeatsMain")) {
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/displaySeatsMain.jsp").forward(request, response);
+            } else if (action.equals("displaySeats")) {
+                String info = request.getParameter("id");
+                System.out.println(info);
+                String[] idType = info.split(" ");
+                Long i = Long.valueOf(idType[0]);
+                List<ArrayList> data = productSession.searchEventSessions(i, idType[1]);
+                List<ArrayList> price = productSession.getSessionsPricing(i, idType[1]);
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.setAttribute("price", price);
+                request.getRequestDispatcher("/displaySeats.jsp").forward(request, response);
+            } else if (action.equals("seatsPriceCreated")) {
+                String apply = request.getParameter("apply");
+                System.out.println(apply);
+                Long i = Long.valueOf(request.getParameter("id"));
+                Integer noCat = Integer.valueOf(request.getParameter("noCat").toString());
+                ArrayList <Double> cat = new ArrayList <Double>();
+                
+                for (int j = 1; j <= noCat; j++){
+                    cat.add(Double.valueOf(request.getParameter("cat" + j)));
+                }
+                productSession.setPricing(i, cat, noCat, apply);
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.setAttribute("success", "true");
+                request.getRequestDispatcher("/displaySeatsMain.jsp").forward(request, response);
             }
 
         } catch (Exception ex) {
