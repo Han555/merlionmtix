@@ -40,7 +40,6 @@
                                     if (data.size() == 0) {
                                 %>
                                 <div align="center"><h3>No Event Found!</h3></div><br><br>
-                                <div align="center"><c:url var="linkHref" value="/BackController?action=productMain" /> Back to Main Page </a></div> 
                                 <%} else {
                                 %>
                                 <table id="table" class="table table-hover">

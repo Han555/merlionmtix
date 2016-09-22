@@ -83,14 +83,24 @@ public class ProductSession implements ProductSessionLocal {
     }
 
     @Override
-    public Long signIn(String name) {
-        event = new Event();
-        subEvent = new SubEvent();
-        session = new SessionEntity();
-        Query q = em.createQuery("SELECT a FROM UserEntity a WHERE a.username=:name");
-        q.setParameter("name", name);
-        user = (UserEntity) q.getSingleResult(); //The user will be point to the real user here
-        return user.getUserId();
+    public boolean signIn(String name) {
+        try {
+            event = new Event();
+            subEvent = new SubEvent();
+            session = new SessionEntity();
+            Query q = em.createQuery("SELECT a FROM UserEntity a WHERE a.username=:name");
+            q.setParameter("name", name);
+            user = (UserEntity) q.getSingleResult(); //The user will be point to the real user here
+            for (int i = 0; i < user.getRoles().size(); i++){
+                if (user.getRoles().get(i).equals("customer"))
+                    return true; 
+                else
+                    return false;
+            }
+            return false;
+        } catch (Exception ex) {
+            return false;
+        } 
     }
 
     @Override
@@ -139,7 +149,9 @@ public class ProductSession implements ProductSessionLocal {
 
     @Override
     public List<ArrayList> getEventList() {
-        Query q = em.createQuery("SELECT a FROM Event a WHERE a.user.userId=1");
+        Query q = em.createQuery("SELECT a FROM Event a WHERE a.user.userId=:id");
+        q.setParameter("id", user.getUserId());
+        
 
         List<ArrayList> eventList = new ArrayList();
         ArrayList list;
@@ -159,7 +171,8 @@ public class ProductSession implements ProductSessionLocal {
             }
         }
 
-        q = em.createQuery("SELECT a FROM SubEvent a WHERE a.user.userId=1");
+        q = em.createQuery("SELECT a FROM SubEvent a WHERE a.user.userId=:id");
+        q.setParameter("id", user.getUserId());
 
         for (Object o : q.getResultList()) {
             SubEvent subEventEntity = (SubEvent) o;
@@ -584,14 +597,14 @@ public class ProductSession implements ProductSessionLocal {
                     }
                 }
             } else {
-                if (session.getEvent() != null){
+                if (session.getEvent() != null) {
                     long propertyID = session.getEvent().getProperty().getId();
-                    setIndividualPricing(session, cat, no, propertyID);   
+                    setIndividualPricing(session, cat, no, propertyID);
                 } else {
                     long propertyID = session.getSubEvent().getProperty().getId();
-                    setIndividualPricing(session, cat, no, propertyID);   
+                    setIndividualPricing(session, cat, no, propertyID);
                 }
-                    
+
             }
             return 1;
         }
@@ -621,7 +634,7 @@ public class ProductSession implements ProductSessionLocal {
                 q.setParameter("cat", i);
                 q.setParameter("id", session.getId());
                 price = (SessionCategoryPrice) q.getSingleResult();
-                price.setPrice(cat.get(i-1));
+                price.setPrice(cat.get(i - 1));
             }
         }
     }
@@ -975,4 +988,5 @@ public class ProductSession implements ProductSessionLocal {
             em.remove(promotionEntity);
         }
     }
+
 }

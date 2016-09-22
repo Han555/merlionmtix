@@ -31,6 +31,11 @@
                         <h4 class="title">Set Promotion</h4>   
                     </div>                        
                     <form id="contact_form" action="${formAction}" method="POST">
+                        <%
+                            if (data.size() == 0) {
+                        %>
+                        <div align="center"><h3>Create An Event First!</h3></div><br><br>
+                        <% } else {%>
 
             <table align="center">
                 <tr>
@@ -115,6 +120,7 @@
                     submitButt.attr("disabled", !checkboxes.is(":checked"));
                 });
             </script>
+            <%}%>
         </form>
 
                 </div>

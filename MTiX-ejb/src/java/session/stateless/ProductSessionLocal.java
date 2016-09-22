@@ -38,7 +38,7 @@ public interface ProductSessionLocal {
 
     public void generateUser();
 
-    public Long signIn(String name);
+    public boolean signIn(String name);
 
     public List<ArrayList> getEventList();
 

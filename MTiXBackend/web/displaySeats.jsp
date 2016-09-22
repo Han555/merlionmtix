@@ -157,7 +157,11 @@
                     }
                     function setCat3() {
                         $('#Seat_21').mapster('select');
-                    }</script>
+                    }
+                    function setCat4() {
+                        $('#Seat_22').mapster('select');
+                    }
+                                </script>
                     <%} else {%>
                 <img id="shape1" src="img/property/Theatre.png" border="0" width="768" height="576" orgWidth="768" orgHeight="576" usemap="#theatre" alt="" />
                 <map name="theatre" id="theatre">

@@ -395,9 +395,17 @@ public class BackController extends HttpServlet {
                 request.setAttribute("message", message);
                 request.getRequestDispatcher("/readBulletin.jsp").forward(request, response);
             } else if (action.equals("productMain")) {
+                String email = request.getParameter("email");
+                boolean userFound = productSession.signIn(email);
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
-                request.getRequestDispatcher("/productMain.jsp").forward(request, response);
+                
+                if (userFound)
+                    request.getRequestDispatcher("/productMain.jsp").forward(request, response);
+                else {
+                    request.setAttribute("error", "true");
+                    request.getRequestDispatcher("/productEnterUser.jsp").forward(request, response);
+                }
             } else if (action.equals("propertyMain")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
@@ -735,6 +743,10 @@ public class BackController extends HttpServlet {
                 request.setAttribute("data", data);
                 request.setAttribute("success", "true");
                 request.getRequestDispatcher("/displaySeatsMain.jsp").forward(request, response);
+            } else if (action.equals("productEnterUser")) {;
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/productEnterUser.jsp").forward(request, response);
             }
 
         } catch (Exception ex) {
