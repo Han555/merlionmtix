@@ -19,7 +19,7 @@
         </div>
 
         <div class="row">
-            <h5>Enter Event Organizer : &nbsp<input type="text" name="id" required="true" class="form-control"></h5>  
+            <h5>Enter Event Organizer : &nbsp<input type="text" name="id" required class="form-control"></h5>  
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
                     <img src="img/session.jpg" alt="concert_main" style="width:300 px;height:300px">
