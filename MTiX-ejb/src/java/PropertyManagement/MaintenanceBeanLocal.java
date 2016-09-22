@@ -8,8 +8,9 @@ package PropertyManagement;
 import java.util.Date;
 import java.util.List;
 import entity.MaintenanceSchedule;
+import javax.ejb.Local;
 
-
+@Local
 public interface MaintenanceBeanLocal {
     
     public Boolean addMaintenance(Long propertyId, Date start, Date end);

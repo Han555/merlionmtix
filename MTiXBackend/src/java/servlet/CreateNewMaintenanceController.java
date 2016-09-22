@@ -8,6 +8,7 @@ package servlet;
 import PropertyManagement.MaintenanceBeanLocal;
 import PropertyManagement.ReservePropertyBeanLocal;
 import PropertyManagement.SeatingPlanManagementBeanLocal;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -55,13 +56,17 @@ public class CreateNewMaintenanceController extends HttpServlet {
             SeatingPlanManager spm = new SeatingPlanManager(seatingPlanManagementBeanLocal);
             ReservationManager rm = new ReservationManager(reservePropertyBeanLocal);
             MaintenanceScheduleManager msm = new MaintenanceScheduleManager(maintenanceBeanLocal);
+            String msg = new String();
             String idStr = request.getParameter("propertyList");
             String mDaterange = request.getParameter("mdaterange");
+            System.out.println(idStr+mDaterange);
             if (msm.addMaintenance(idStr,mDaterange)){
-                request.setAttribute("msg", "success");
-            } else request.setAttribute("msg", "conflict");
+                msg = "success";
+            } else msg = "conflict";
                   
-            request.getRequestDispatcher("/maintenance.jsp").forward(request, response);
+            Gson gson = new Gson();
+            response.getWriter().write(gson.toJson(msg));
+            
         } catch (ParseException ex) {
             Logger.getLogger(CreateNewMaintenanceController.class.getName()).log(Level.SEVERE, null, ex);
         }

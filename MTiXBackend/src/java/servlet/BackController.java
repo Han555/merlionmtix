@@ -691,7 +691,13 @@ public class BackController extends HttpServlet {
                 request.setAttribute("username", currentUser);
                 request.setAttribute("properties", spm.getAllProperties());
                 request.getRequestDispatcher("/maintenance.jsp").forward(request, response);
-            } 
+            } else if (action.equals("ticketReservation")) {
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/ticketReservation.jsp").forward(request, response);
+            } else if (action.equals("dummyPromotion")) {
+                productSession.setDummyPromotion();
+            }
             
         } catch (Exception ex) {
             ex.printStackTrace();

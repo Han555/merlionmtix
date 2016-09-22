@@ -1,6 +1,6 @@
 <%-- 
-    Document   : promotionOptions
-    Created on : Sep 20, 2016, 12:25:26 PM
+    Document   : ticketReservation
+    Created on : Sep 22, 2016, 12:03:34 AM
     Author     : Student-ID
 --%>
 
@@ -23,7 +23,7 @@
                         <div class="card-body">
                             <i class="icon fa fa-share-alt fa-4x"></i>
                             <div class="content">
-                                <div class="title">Set Promotion</div>
+                                <div class="title">Reserve Tickets</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>
@@ -31,13 +31,13 @@
                 </a>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <c:url var="linkHref" value="/BackController?action=editPromo" />
+                <c:url var="linkHref" value="/BackController?action=dummyPromotion" />
                 <a href="${linkHref}">
                     <div class="card red summary-inline">
                         <div class="card-body">
                             <i class="icon fa fa-share-alt fa-4x"></i>
                             <div class="content">
-                                <div class="title">Edit Promotion</div>
+                                <div class="title">Edit Reservation</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>
@@ -46,35 +46,23 @@
             </div>
 
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <c:url var="linkHref" value="/BackController?action=deletePromotionMain" />
+                <c:url var="linkHref" value="/BackController?action=testCreateEvent" />
                 <a href="${linkHref}">
                     <div class="card green summary-inline">
                         <div class="card-body">
                             <i class="icon fa fa-share-alt fa-4x"></i>
                             <div class="content">
-                                <div class="title">Delete Promotion</div>
+                                <div class="title">Delete Reservation</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>
                     </div>
                 </a>
             </div>
-        </div>
-        <div class="row">   
-            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <c:url var="linkHref" value="/BackController?action=ticketReservation" />
-                <a href="${linkHref}">
-                    <div class="card yellow summary-inline">
-                        <div class="card-body">
-                            <i class="icon fa fa-share-alt fa-4x"></i>
-                            <div class="content">
-                                <div class="title">Ticket Reservation</div>
-                            </div>
-                            <div class="clear-both"></div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+
+            
+
+
         </div>
 
     </div> 

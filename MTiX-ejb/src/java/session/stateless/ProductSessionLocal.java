@@ -57,5 +57,7 @@ public interface ProductSessionLocal {
     public void writePromotion(ArrayList data);
 
     public void deletePromotion(String[] id);
+
+    void setDummyPromotion();
     
 }

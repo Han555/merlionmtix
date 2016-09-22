@@ -19,7 +19,7 @@
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                 <c:url var="linkHref" value="/BackController?action=bulletinBoard" />
                 <a href="${linkHref}">
-                    <div class="card red summary-inline">
+                    <div class="card green summary-inline">
                         <div class="card-body">
                             <i class="icon fa fa-inbox fa-4x"></i>
                             <div class="content">

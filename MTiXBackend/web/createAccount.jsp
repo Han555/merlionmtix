@@ -28,43 +28,54 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-xs-12">
                 <div class="card">
-                    <div class="content"> 
-                        <div class="container-fluid">
-                            <div class="row">
-
-                                <div class="col-md-8">
-                                    <div class="header">
-                                        <h4 class="title">Create Account</h4>   
-                                    </div>
-                                    <div class="content">
-                                        <form id="contact_form" action="${formAction}" method="POST">
-                                            <div class="row">
-                                                <label style="text-align: justify" for="name">Username:</label><br />
-                                                <input style="text-align: justify" id="to" class="input" name="username" type="text" value="" size="30" /><br />
-                                            </div>
-                                            <div class="row">
-                                                <label style="text-align: justify" for="email">Role:</label><br />
-                                                <input style="text-align: justify" id="subject" class="input" name="role" type="text" value="" size="30" /><br />
-                                            </div>
-                                            <div class="row">
-                                                <label style="text-align: justify" for="email">Mobile Number:</label><br />
-                                                <input style="text-align: justify" id="subject" class="input" name="mobileNumber" type="text" value="" size="30" /><br />
-                                            </div>
-                                            <input type="hidden" name="username" value=<%= request.getAttribute("username")%> readonly="readonly" />
-                                            <br>
-                                            <c:url var="formAction" value="/BackController" />
-                                            <input type="submit" value="Create Account" />
-                                        </form>	
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="title">Create Account</div>
                         </div>
+                    </div>
+                    <div class="card-body">
+                        <c:url var="formAction" value="/BackController?action=creating" />
+                        <form id="contact_form" action="${formAction}" method="POST">
+                            <div class="form-group" style="padding-bottom: 50px;">
+
+                                <label for="eventdaterange" class="col-sm-2 control-label">Email Username</label>
+                                <div class="col-sm-6">
+                                    <input type="email" name="username" id="username" class="form-control" value="" required
+                                           data-fv-notempty-message="Email username is required">
+
+                                </div> 
+                            </div>
+                            <div class="form-group" style="padding-bottom: 50px;">
+
+                                <label for="eventdaterange" class="col-sm-2 control-label">Role</label>
+                                <div class="col-sm-6">
+                                    <select class="js-example-basic-single js-states" style="width: 100%" name="role" id="role">
+                                        <option value="product manager">product manager</option>
+                                        <option value="property manager">property manager</option>
+                                        <option value="event organizer">event organizer</option>
+
+                                    </select>
+                                </div> 
+                            </div>
+                            <div class="form-group" style="padding-bottom: 50px;">
+
+                                <label for="eventdaterange" class="col-sm-2 control-label">Mobile Number</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="mobileNumber" id="username" class="form-control" value="" required
+                                           data-fv-notempty-message="Mobile Number is required">
+
+                                </div> 
+                            </div>
+                            <input type="hidden" name="username" value=<%= request.getAttribute("username")%> readonly="readonly" />
+                            <br>
+                            <c:url var="formAction" value="/BackController" />
+                            <input type="submit" value="Create Account" />
+                        </form>	
                     </div>
                 </div>
             </div>
-
         </div>
     </div> 
 </div>

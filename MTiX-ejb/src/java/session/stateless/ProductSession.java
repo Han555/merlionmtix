@@ -999,4 +999,19 @@ public class ProductSession implements ProductSessionLocal {
             em.remove(promotionEntity);
         }
     }
+
+    @Override
+    public void setDummyPromotion() {
+        //generateUser();
+        Query q = em.createQuery("SELECT s FROM SessionEntity s where s.id=1");
+        SessionEntity s = new SessionEntity();
+        
+        for(Object o: q.getResultList()) {
+            s = (SessionEntity) o;
+        }
+        
+        setPricing(s.getId(), 20.00, 30.00, 40.00, "yes");
+    }
+        
+        
 }

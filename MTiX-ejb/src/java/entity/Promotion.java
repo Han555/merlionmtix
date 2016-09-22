@@ -9,12 +9,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 /**
@@ -31,7 +35,7 @@ public class Promotion implements Serializable {
     private Double discountRate;
     private String descriptions;
     private String requirements; //one word for example, volume discount -- 2, 2 tickets to get the discount/ 
-                                //or visa -- use visa to get the discount
+    private int numberOfTickets;                            //or visa -- use visa to get the discount
     
     @ManyToOne
     private Event event; 
@@ -40,11 +44,35 @@ public class Promotion implements Serializable {
     @ManyToMany
     private Collection<PromotionType> promotionsType = new ArrayList<PromotionType>();
     
+    
     public void create(String name, Double discountRate, String descriptions, String requirements){
         this.setName(name);
         this.setDiscountRate(discountRate);
         this.setDescriptions(descriptions);
         this.setRequirements(requirements);
+    }
+    
+    public void createDummy(String name, Double discountRate, String descriptions, String requirements) {
+        this.setName(name);
+        this.setDiscountRate(discountRate);
+        this.setDescriptions(descriptions);
+        this.setRequirements(requirements);
+        Integer i=1;
+        Event e = new Event();
+        e.setId(Long.valueOf(i.longValue()));
+        this.setEvent(e);
+        SubEvent s = new SubEvent();
+        s.setId(Long.valueOf(i.longValue()));
+        this.setSubEvent(s);
+        this.setNumberOfTickets(0);
+    }
+
+    public int getNumberOfTickets() {
+        return numberOfTickets;
+    }
+
+    public void setNumberOfTickets(int numberOfTickets) {
+        this.numberOfTickets = numberOfTickets;
     }
     
     public Long getId() {

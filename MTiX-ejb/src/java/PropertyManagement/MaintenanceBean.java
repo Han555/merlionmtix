@@ -10,11 +10,12 @@ import entity.MaintenanceSchedule;
 import entity.Property;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-
+@Stateless
 public class MaintenanceBean implements MaintenanceBeanLocal {
 
     @PersistenceContext

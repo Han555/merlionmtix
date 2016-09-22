@@ -138,8 +138,11 @@
             type: "POST",
             url: 'CreateNewMaintenance',
             data: $("#maintenanceForm").serialize(),
-            success: function () {
-                
+            success: function (result) {
+                if(result[0]="success"){
+                    alert("success");
+                }
+                getMaintenance();
             }
         });
         console.log($("#maintenanceForm").serialize());
