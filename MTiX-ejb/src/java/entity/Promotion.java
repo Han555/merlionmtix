@@ -50,6 +50,7 @@ public class Promotion implements Serializable {
         this.setDiscountRate(discountRate);
         this.setDescriptions(descriptions);
         this.setRequirements(requirements);
+        this.setNumberOfTickets(0);
     }
     
     public void createDummy(String name, Double discountRate, String descriptions, String requirements) {

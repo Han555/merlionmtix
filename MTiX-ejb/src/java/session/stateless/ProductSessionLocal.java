@@ -58,6 +58,31 @@ public interface ProductSessionLocal {
 
     public void deletePromotion(String[] id);
 
-    void setDummyPromotion();
+    ArrayList<ArrayList<String>> getPromotion();
+
+    void addTickets(String promotionId, String numOfTics);
+
+    void deleteTickets(String promotionId, String numOfTics);
+
+    boolean checkTicketAmount(String promotionId, String numOfTics);
+
+    void editTicketAmount(String promotionId, String ticketAmount);
+
+    ArrayList<ArrayList<String>> retrieveEvents();
+
+    void addAlert(String percentage, String alertType, String username, String date, String eventId);
+
+    void addSubEvent();
+
+    boolean checkSubEvent(String eventId);
+
+    void addSubEventAlert(String percentage, String alertType, String username, String date, String eventId);
+
+    void editAlert(String percentage, String alertType, String username, String date, String eventId);
+
+    void editSubEventAlert(String percentage, String alertType, String username, String date, String eventId);
+
+
+
     
 }

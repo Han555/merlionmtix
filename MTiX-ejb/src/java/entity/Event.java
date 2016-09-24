@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -54,6 +55,17 @@ public class Event implements Serializable {
 
     @ManyToOne
     private Property property;
+    
+    @OneToOne
+    private Alert alert;
+
+    public Alert getAlert() {
+        return alert;
+    }
+
+    public void setAlert(Alert alert) {
+        this.alert = alert;
+    }
 
     public String getDescription() {
         return description;

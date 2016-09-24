@@ -27,26 +27,29 @@ public class Property implements Serializable {
     private Integer capacity;
     
     
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="property")
+    @OneToMany(orphanRemoval = true,mappedBy="property")
     private List<Event> events = new ArrayList<Event>();
     
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="property")
+    @OneToMany(orphanRemoval = true, mappedBy="property")
     private List<SubEvent> subEvents = new ArrayList<SubEvent>();
     
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="property")
+    @OneToMany(orphanRemoval = true,mappedBy="property")
     private List<SectionEntity> sections = new ArrayList<SectionEntity>();
     
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="property")
+    @OneToMany(orphanRemoval = true,mappedBy="property")
     private List<Manpower> manpower = new ArrayList<Manpower>();
     
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="property")
+    @OneToMany(orphanRemoval = true,mappedBy="property")
     private List<FoodOutlet> foodOutlets = new ArrayList<FoodOutlet>();
     
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="property")
+    @OneToMany(orphanRemoval = true,mappedBy="property")
     private List<SectionCategory> category = new ArrayList<SectionCategory>();
     
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="property")
+    @OneToMany(orphanRemoval = true,mappedBy="property")
     private List<MaintenanceSchedule> maintenanceSchedule = new ArrayList<MaintenanceSchedule>();
+    
+    @OneToMany(orphanRemoval = true,mappedBy="property")
+    private List<Equipment> equipment = new ArrayList<Equipment>();
     
     public void createProperty(String propertyName, Integer propertyNo, Integer capacity){
         this.setPropertyName(propertyName);
@@ -246,6 +249,20 @@ public class Property implements Serializable {
      */
     public void setCategory(List<SectionCategory> category) {
         this.category = category;
+    }
+
+    /**
+     * @return the equipment
+     */
+    public List<Equipment> getEquipment() {
+        return equipment;
+    }
+
+    /**
+     * @param equipment the equipment to set
+     */
+    public void setEquipment(List<Equipment> equipment) {
+        this.equipment = equipment;
     }
 
    

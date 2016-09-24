@@ -17,7 +17,7 @@
     <div class="side-body padding-top">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <c:url var="linkHref" value="/BackController?action=setPromotion" />
+                <c:url var="linkHref" value="/BackController?action=setTickets" />
                 <a href="${linkHref}">
                     <div class="card blue summary-inline">
                         <div class="card-body">
@@ -31,7 +31,7 @@
                 </a>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <c:url var="linkHref" value="/BackController?action=dummyPromotion" />
+                <c:url var="linkHref" value="/BackController?action=editTickets" />
                 <a href="${linkHref}">
                     <div class="card red summary-inline">
                         <div class="card-body">
@@ -46,7 +46,7 @@
             </div>
 
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <c:url var="linkHref" value="/BackController?action=testCreateEvent" />
+                <c:url var="linkHref" value="/BackController?action=deleteTickets" />
                 <a href="${linkHref}">
                     <div class="card green summary-inline">
                         <div class="card-body">

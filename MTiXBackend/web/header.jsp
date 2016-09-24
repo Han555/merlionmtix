@@ -82,7 +82,8 @@
                                             <p><%= request.getAttribute("username")%></p>
                                             <div class="btn-group margin-bottom-2x" role="group">
                                                 <button type="button" class="btn btn-default"><i class="fa fa-user"></i> Profile</button>
-                                                <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> Logout</button>
+                                                <c:url var="linkHref" value="/BackController?action=logout" />
+                                                <a href="${linkHref}"> <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> Logout</button></a>
                                             </div>
                                         </div>
                                     </li>
@@ -153,7 +154,7 @@
                                                     </li>
                                                     <li><c:url var="linkHref" value="/BackController?action=configuration" /><a href="${linkHref}">Equipment & Fixture</a>
                                                     </li>
-                                                    <li><c:url var="linkHref" value="/BackController?action=configuration" /><a href="${linkHref}">Food Outlets</a>
+                                                    <li><c:url var="linkHref" value="/BackController?action=foodOutlets" /><a href="${linkHref}">Food Outlets</a>
                                                     </li>
                                                 </ul>
                                             </div>

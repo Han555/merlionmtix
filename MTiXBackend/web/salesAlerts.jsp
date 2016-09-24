@@ -1,6 +1,6 @@
 <%-- 
-    Document   : sessionMain
-    Created on : Sep 20, 2016, 11:05:41 AM
+    Document   : salesAlerts
+    Created on : Sep 23, 2016, 3:08:08 PM
     Author     : Student-ID
 --%>
 
@@ -17,13 +17,13 @@
     <div class="side-body padding-top">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <c:url var="linkHref" value="/BackController?action=createSessionMain" />
+                <c:url var="linkHref" value="/BackController?action=createAlert" />
                 <a href="${linkHref}">
-                    <div class="card green summary-inline">
+                    <div class="card blue summary-inline">
                         <div class="card-body">
                             <i class="icon fa fa-share-alt fa-4x"></i>
                             <div class="content">
-                                <div class="title">Create Session</div>
+                                <div class="title">Creating Alert</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>
@@ -31,38 +31,24 @@
                 </a>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                <c:url var="linkHref" value="/BackController?action=editMain" />
+                <c:url var="linkHref" value="/BackController?action=editAlert" />
                 <a href="${linkHref}">
-                    <div class="card blue summary-inline">
+                    <div class="card green summary-inline">
                         <div class="card-body">
                             <i class="icon fa fa-share-alt fa-4x"></i>
                             <div class="content">
-                                <div class="title">Editing Session</div>
+                                <div class="title">Editing Alert</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>
                     </div>
                 </a>
             </div>
-            
-                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                    <c:url var="linkHref" value="/BackController?action=deleteMain" />
-                    <a href="${linkHref}">
-                        <div class="card yellow summary-inline">
-                            <div class="card-body">
-                                <i class="icon fa fa-share-alt fa-4x"></i>
-                                <div class="content">
-                                    <div class="title">Delete Session</div>
-                                </div>
-                                <div class="clear-both"></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            
 
-        </div>
+           
+       
         
+
     </div> 
 </div>
 </div>

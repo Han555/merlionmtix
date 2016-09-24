@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -50,6 +51,16 @@ public class SubEvent implements Serializable {
     private List<Manpower> manpower = new ArrayList<Manpower>();
     @ManyToOne
     private Property property;
+    @OneToOne
+    private Alert alert;
+
+    public Alert getAlert() {
+        return alert;
+    }
+
+    public void setAlert(Alert alert) {
+        this.alert = alert;
+    }
 
     public List<Equipment> getEquipments() {
         return equipments;

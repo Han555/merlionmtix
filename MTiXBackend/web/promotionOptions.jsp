@@ -23,7 +23,7 @@
                         <div class="card-body">
                             <i class="icon fa fa-share-alt fa-4x"></i>
                             <div class="content">
-                                <div class="title">Set Promotion</div>
+                                <div class="title">Sets Promotion</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>
@@ -69,6 +69,20 @@
                             <i class="icon fa fa-share-alt fa-4x"></i>
                             <div class="content">
                                 <div class="title">Ticket Reservation</div>
+                            </div>
+                            <div class="clear-both"></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                <c:url var="linkHref" value="/BackController?action=salesAlerts" />
+                <a href="${linkHref}">
+                    <div class="card blue summary-inline">
+                        <div class="card-body">
+                            <i class="icon fa fa-share-alt fa-4x"></i>
+                            <div class="content">
+                                <div class="title">Sales Alertings</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>

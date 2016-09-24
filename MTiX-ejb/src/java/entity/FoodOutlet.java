@@ -35,6 +35,13 @@ public class FoodOutlet implements Serializable {
         this.setOutletType(outletType);
         this.setOutletDescription(outletDescription);
     }
+    
+    public void createOutlet(String name, String type, String description) {
+        this.outletName = name;
+        this.outletType = type;
+        this.outletDescription = description;      
+    }
+    
     public Long getId() {
         return id;
     }

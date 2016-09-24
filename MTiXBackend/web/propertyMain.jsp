@@ -13,7 +13,7 @@
 
     <div class="container"> 
         <div class="page-title">
-            <span class="title">Product Management System</span>
+            <span class="title">Property Management System</span>
         </div>
 
         <div class="row">
@@ -72,7 +72,7 @@
                     <img src="img/foodoutlet.jpg" alt="outdoor_main" style="width:300 px;height:300px">
                     <div class="caption">
                         <h3>Food Outlets</h3>
-                        <p><c:url var="linkHref" value="/BackController?action=promotionMain" /><a href="${linkHref}" class="btn btn-primary" role="button">Enter</a> </p>
+                        <p><c:url var="linkHref" value="/BackController?action=foodOutlets" /><a href="${linkHref}" class="btn btn-primary" role="button">Enter</a> </p>
                     </div>
                 </div>
             </div>
