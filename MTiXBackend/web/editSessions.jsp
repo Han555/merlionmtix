@@ -30,7 +30,7 @@
     <div class="side-body padding-top">
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="header">
                         <h4 class="title">Edit Sessions</h4>   
@@ -45,17 +45,17 @@
                     <td>&nbsp</td> 
                 </tr>
                 <tr>
-                    <td align="right">Session Name : </td>
+                    <td align="right">Session Name : &nbsp</td>
                     <td align="left"><input type="text" required="true" name="name" value="<%=data.get(1)%>"> </td>  
                     <td>&nbsp</td> <td>&nbsp</td> 
-                    <td align="right">Previous Start Time : </td>
+                    <td align="right">Previous Start Time : &nbsp</td>
                     <td align="left"><input type="text" disabled="true" value="<%=data.get(3)%>"</td>    
                 </tr>
                 <tr>
-                    <td align="right">Session description : </td>
+                    <td align="right">Session description : &nbsp</td>
                     <td align="left"><input type="text" required="true" name="description" value="<%=data.get(2)%>"</td>     
                     <td>&nbsp</td> <td>&nbsp</td> 
-                    <td align="right">Previous End Time : </td>
+                    <td align="right">Previous End Time : &nbsp</td>
                     <td align="left"><input type="text" disabled="true" value="<%=data.get(4)%>"</td>      
                 </tr>
                 <tr>
@@ -67,10 +67,10 @@
             </table>
             <table align="center">
                 <tr>
-                    <td align="right">Session Start Time : </td>
+                    <td align="right">Session Start Time : &nbsp</td>
                     <td align="left"><input type="text" required="true" name="start" class="form-control start"</td>                 
                     <td>&nbsp</td>     
-                    <td align="right">Session End Time : </td>
+                    <td align="right">Session End Time : &nbsp</td>
                     <td align="left"><input type="text" required="true" name="end" class="form-control end"</td>         
                 <script>
                     $('.start').timepicker({

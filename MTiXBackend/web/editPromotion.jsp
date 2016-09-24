@@ -43,10 +43,10 @@
                                 <td>&nbsp</td> 
                             </tr>
                             <tr>
-                                <td align="right">Name : </td>
+                                <td align="right">Name : &nbsp</td>
                                 <td align="left"><input type="text" required="true" name="name" class="form-control" value="<%=data.get(3)%>"> </td>  
                                 <td>&nbsp</td> <td>&nbsp</td> 
-                                <td align="right">Type : </td>
+                                <td align="right">Type : &nbsp</td>
                                 <td align="left"><input type="text" disabled="true" class="form-control" value="<%=promotionType%>"</td>    
                             </tr>
 
@@ -55,10 +55,10 @@
                                 <td>&nbsp</td>                     
                             </tr>
                             <tr>
-                                <td align="right">Requirement : </td>
+                                <td align="right">Requirement : &nbsp</td>
                                 <td align="left"><input type="text" required="true" class="form-control" name="requirement" value="<%=data.get(4)%>"</td>     
                                 <td>&nbsp</td> <td>&nbsp</td> 
-                                <td align="right">Discount Rate(%) : </td>
+                                <td align="right">Discount Rate(%) : &nbsp</td>
                                 <td align="left"><input type="number" min="0" max="100"  required="true" class="form-control" name="discount" value="<%=data.get(5)%>"</td>      
                             </tr>
 
@@ -67,7 +67,7 @@
                                 <td>&nbsp</td>                     
                             </tr>
                             <tr>
-                                <td align="right">Description : </td>
+                                <td align="right">Description : &nbsp</td>
                                 <td align="left"><input type="text" required="true" class="form-control" name="desc" value="<%=data.get(6)%>"</td>       
                             </tr>
                             <tr>

@@ -32,6 +32,9 @@
                     <c:if test="${promotionCreated == 'true'}">
                         <font color="red">Promotion Created Successfully!!</font><br/>
                     </c:if>
+                    <c:if test="${promotionCreated1245 == 'true'}">
+                        <font color="red">Promotion Created Successfully!!</font><br/>
+                    </c:if>
                     <form id="contact_form" action="${formAction}" method="POST">
 
                         <table align="center">
@@ -40,7 +43,7 @@
                                 <td>&nbsp</td>                     
                             </tr>
                             <tr>
-                                <td align="right">Promotion Type</td>
+                                <td align="right">Promotion Type : &nbsp</td>
                                 <td align="left">
                                     <select class="form-control" name="type" required="true">
                                         <option value="1">Credit Card</option>

@@ -48,8 +48,11 @@ import session.stateless.UnlockAccountSessionLocal;
 @WebServlet(name = "BackController", urlPatterns = {"/BackController", "/BackController?*"})
 public class BackController extends HttpServlet {
 
+<<<<<<< HEAD
    
 
+=======
+>>>>>>> refs/remotes/origin/jing-ying
     @EJB
     SeatingPlanManagementBeanLocal seatingPlanManagementBeanLocal;
 
@@ -397,9 +400,17 @@ public class BackController extends HttpServlet {
                 request.setAttribute("message", message);
                 request.getRequestDispatcher("/readBulletin.jsp").forward(request, response);
             } else if (action.equals("productMain")) {
+                String email = request.getParameter("email");
+                boolean userFound = productSession.signIn(email);
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
-                request.getRequestDispatcher("/productMain.jsp").forward(request, response);
+                
+                if (userFound)
+                    request.getRequestDispatcher("/productMain.jsp").forward(request, response);
+                else {
+                    request.setAttribute("error", "true");
+                    request.getRequestDispatcher("/productEnterUser.jsp").forward(request, response);
+                }
             } else if (action.equals("propertyMain")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
@@ -407,6 +418,8 @@ public class BackController extends HttpServlet {
             } else if (action.equals("sessionMain")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
+                String email = request.getParameter("id");
+              //  productSession.signIn(email);
                 request.getRequestDispatcher("/sessionMain.jsp").forward(request, response);
             } else if (action.equals("promotionMain")) {
                 request.setAttribute("role", role);
@@ -541,6 +554,8 @@ public class BackController extends HttpServlet {
                 String requirement = request.getParameter("requirement");
                 String desc = request.getParameter("description");
                 productSession.setPromotion_1(id, type, name2, discount, requirement, desc);
+                request.setAttribute("promotionCreated1245", "true");
+                request.getRequestDispatcher("/promotionMain.jsp").forward(request, response);
             } else if (action.equals("setPromotion")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
@@ -558,6 +573,8 @@ public class BackController extends HttpServlet {
                     request.getRequestDispatcher("/promotion_ticketMain.jsp").forward(request, response);
                 } else if (type.equals("6")) {
                     request.getRequestDispatcher("/promotion_Customization.jsp").forward(request, response);
+                } else {
+                    request.getRequestDispatcher("/promotion.jsp").forward(request, response);
                 }
             } else if ("promotionCreated".equals(page)) {
                 String[] id;
@@ -622,10 +639,11 @@ public class BackController extends HttpServlet {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
                 request.setAttribute("data", data);
+                request.getRequestDispatcher("/editPromotion.jsp").forward(request, response);
             } else if (action.equals("promotionEdited")) {
                 productManager.editPromotion(request);
-                String info = request.getParameter("id");
-                String[] idType = info.split(" ");
+                String id = request.getParameter("eventId").toString() + " " + request.getParameter("eventType");
+                String[] idType = id.split(" ");
                 Long i = Long.valueOf(idType[0]);
                 List<ArrayList> data = productSession.searchEventPromotion(i, idType[1]);
                 request.setAttribute("eventType", idType[1]);
@@ -693,6 +711,7 @@ public class BackController extends HttpServlet {
                 request.setAttribute("username", currentUser);
                 request.setAttribute("properties", spm.getAllProperties());
                 request.getRequestDispatcher("/maintenance.jsp").forward(request, response);
+<<<<<<< HEAD
             } else if (action.equals("ticketReservation")) {
                 request.setAttribute("role", role);
                 request.setAttribute("username", currentUser);
@@ -961,6 +980,51 @@ public class BackController extends HttpServlet {
             } else if (action.equals("logout")) {
                 request.getRequestDispatcher("/logout.jsp").forward(request, response);
             } 
+=======
+            } else if (action.equals("generateUser")) {
+                productSession.generateUser();
+            } else if (action.equals("displaySeatsMain")) {
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.getRequestDispatcher("/displaySeatsMain.jsp").forward(request, response);
+            } else if (action.equals("displaySeats")) {
+                String info = request.getParameter("id");
+                System.out.println(info);
+                String[] idType = info.split(" ");
+                Long i = Long.valueOf(idType[0]);
+                List<ArrayList> data = productSession.searchEventSessions(i, idType[1]);
+                List<ArrayList> price = productSession.getSessionsPricing(i, idType[1]);
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.setAttribute("price", price);
+                request.getRequestDispatcher("/displaySeats.jsp").forward(request, response);
+            } else if (action.equals("seatsPriceCreated")) {
+                String apply = request.getParameter("apply");
+                System.out.println(apply);
+                Long i = Long.valueOf(request.getParameter("id"));
+                Integer noCat = Integer.valueOf(request.getParameter("noCat").toString());
+                ArrayList <Double> cat = new ArrayList <Double>();
+                
+                for (int j = 1; j <= noCat; j++){
+                    cat.add(Double.valueOf(request.getParameter("cat" + j)));
+                }
+                productSession.setPricing(i, cat, noCat, apply);
+                List<ArrayList> data = productSession.getEventList();
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.setAttribute("data", data);
+                request.setAttribute("success", "true");
+                request.getRequestDispatcher("/displaySeatsMain.jsp").forward(request, response);
+            } else if (action.equals("productEnterUser")) {;
+                request.setAttribute("role", role);
+                request.setAttribute("username", currentUser);
+                request.getRequestDispatcher("/productEnterUser.jsp").forward(request, response);
+            }
+
+>>>>>>> refs/remotes/origin/jing-ying
         } catch (Exception ex) {
             ex.printStackTrace();
             //request.getRequestDispatcher("/error.jsp").forward(request, response);

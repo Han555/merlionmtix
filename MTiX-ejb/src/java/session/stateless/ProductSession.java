@@ -43,20 +43,20 @@ public class ProductSession implements ProductSessionLocal {
 
     @Override
     public void generateUser() {
-        for (int i = 0; i < 10; i++) {
-            user = new UserEntity();
-            user.createAccount("name" + i, "password" + i, "salt" + i, "9847345" + i);
-            em.persist(user);
-            em.flush();
-        }
-        user = new UserEntity();
+        /*for (int i = 0; i < 10; i++) {
+         user = new UserEntity();
+         user.createAccount("name" + i, "password" + i, "salt" + i, "9847345" + i);
+         em.persist(user);
+         em.flush();
+         }
+         user = new UserEntity();
 
-        for (int i = 1; i <= 3; i++) {
-            SectionCategory section = new SectionCategory();
-            section.createSectionCategory("CAT" + i, i);
-            em.persist(section);
-            em.flush();
-        }
+         for (int i = 1; i <= 3; i++) {
+         SectionCategory section = new SectionCategory();
+         section.createSectionCategory("CAT" + i, i);
+         em.persist(section);
+         em.flush();
+         }*/
 
         PromotionType promotionType = new PromotionType();
         promotionType.setName("Credit Card");
@@ -84,15 +84,24 @@ public class ProductSession implements ProductSessionLocal {
     }
 
     @Override
-    public Long signIn(String name, String password) {
-        event = new Event();
-        subEvent = new SubEvent();
-        session = new SessionEntity();
-        Query q = em.createQuery("SELECT a FROM UserEntity a WHERE a.username=:name AND a.password=:pw");
-        q.setParameter("name", name);
-        q.setParameter("pw", password);
-        user = (UserEntity) q.getSingleResult(); //The user will be point to the real user here
-        return user.getUserId();
+    public boolean signIn(String name) {
+        try {
+            event = new Event();
+            subEvent = new SubEvent();
+            session = new SessionEntity();
+            Query q = em.createQuery("SELECT a FROM UserEntity a WHERE a.username=:name");
+            q.setParameter("name", name);
+            user = (UserEntity) q.getSingleResult(); //The user will be point to the real user here
+            for (int i = 0; i < user.getRoles().size(); i++){
+                if (user.getRoles().get(i).equals("customer"))
+                    return true; 
+                else
+                    return false;
+            }
+            return false;
+        } catch (Exception ex) {
+            return false;
+        } 
     }
 
     @Override
@@ -141,7 +150,13 @@ public class ProductSession implements ProductSessionLocal {
 
     @Override
     public List<ArrayList> getEventList() {
+<<<<<<< HEAD
         Query q = em.createQuery("SELECT a FROM Event a WHERE a.user.userId=1");
+=======
+        Query q = em.createQuery("SELECT a FROM Event a WHERE a.user.userId=:id");
+        q.setParameter("id", user.getUserId());
+        
+>>>>>>> refs/remotes/origin/jing-ying
 
         List<ArrayList> eventList = new ArrayList();
         ArrayList list;
@@ -161,7 +176,12 @@ public class ProductSession implements ProductSessionLocal {
             }
         }
 
+<<<<<<< HEAD
         q = em.createQuery("SELECT a FROM SubEvent a WHERE a.user.userId=1");
+=======
+        q = em.createQuery("SELECT a FROM SubEvent a WHERE a.user.userId=:id");
+        q.setParameter("id", user.getUserId());
+>>>>>>> refs/remotes/origin/jing-ying
 
         for (Object o : q.getResultList()) {
             SubEvent subEventEntity = (SubEvent) o;
@@ -245,7 +265,8 @@ public class ProductSession implements ProductSessionLocal {
 
                         attributes.add(start); //3
                         attributes.add(end);  //4
-                        attributes.add(sessionEntity.getEvent().getProperty());  //5
+                        attributes.add(sessionEntity.getEvent().getProperty().getId());  //5
+                        attributes.add(event.getProperty().getCategory().size()); //6
 
                         eventSessions.add(attributes);
                     }
@@ -271,7 +292,8 @@ public class ProductSession implements ProductSessionLocal {
 
                         attributes.add(start);
                         attributes.add(end);
-                        attributes.add(sessionEntity.getSubEvent().getProperty());
+                        attributes.add(sessionEntity.getSubEvent().getProperty().getId());
+                        attributes.add(subEvent.getProperty().getCategory().size());
 
                         subEventSessions.add(attributes);
                     }
@@ -562,7 +584,7 @@ public class ProductSession implements ProductSessionLocal {
     }
 
     @Override
-    public int setPricing(Long id, Double cat1, Double cat2, Double cat3, String apply) {
+    public int setPricing(Long id, ArrayList<Double> cat, int no, String apply) {
         SessionEntity session = em.find(SessionEntity.class, id);
         if (session == null) {
             return 0;
@@ -573,81 +595,56 @@ public class ProductSession implements ProductSessionLocal {
                     Event eventEntity = em.find(Event.class, eventID);
                     for (Object obj : eventEntity.getSessions()) {
                         SessionEntity sessionEntity = (SessionEntity) obj;
-                        setIndividualPricing(sessionEntity, cat1, cat2, cat3);
+                        setIndividualPricing(sessionEntity, cat, no, eventEntity.getProperty().getId());
                     }
                 } else {
                     Long subEventID = session.getSubEvent().getId(); //If it is a sub event session
                     SubEvent subEvent = em.find(SubEvent.class, subEventID);
                     for (Object obj : subEvent.getSessions()) {
                         SessionEntity sessionEntity = (SessionEntity) obj;
-                        setIndividualPricing(sessionEntity, cat1, cat2, cat3);
+                        setIndividualPricing(sessionEntity, cat, no, subEvent.getProperty().getId());
                     }
                 }
             } else {
-                setIndividualPricing(session, cat1, cat2, cat3);
+                if (session.getEvent() != null) {
+                    long propertyID = session.getEvent().getProperty().getId();
+                    setIndividualPricing(session, cat, no, propertyID);
+                } else {
+                    long propertyID = session.getSubEvent().getProperty().getId();
+                    setIndividualPricing(session, cat, no, propertyID);
+                }
+
             }
             return 1;
         }
     }
 
-    private void setIndividualPricing(SessionEntity session, Double cat1, Double cat2, Double cat3) {
+    private void setIndividualPricing(SessionEntity session, ArrayList<Double> cat, int no, Long propertyID) {
         if (session.getPrice().isEmpty()) { //Never set price at all
-            int catNo = 1;
-            Query q = em.createQuery("SELECT a FROM SectionCategory a WHERE a.categoryNum=:cat1");
-            q.setParameter("cat1", catNo);
-            SectionCategory section = (SectionCategory) q.getSingleResult();
+            for (int i = 1; i <= no; i++) {
+                Query q = em.createQuery("SELECT a FROM SectionCategory a WHERE a.categoryNum=:cat AND a.property.id=:id");
+                q.setParameter("cat", i);
+                q.setParameter("id", propertyID);
+                SectionCategory section = (SectionCategory) q.getSingleResult();
 
-            SessionCategoryPrice price = new SessionCategoryPrice();
-            price.setPrice(cat1);
-            price.setCategory(section);
-            price.setSession(session);
-            em.persist(price);
-            em.flush();
-            session.getPrice().add(price);
+                SessionCategoryPrice price = new SessionCategoryPrice();
+                price.setPrice(cat.get(i - 1));
+                price.setCategory(section);
+                price.setSession(session);
+                em.persist(price);
+                em.flush();
+                session.getPrice().add(price);
+            }
 
-            q = em.createQuery("SELECT a FROM SectionCategory a WHERE a.categoryNum=:cat2");
-            q.setParameter("cat2", catNo + 1);
-            section = (SectionCategory) q.getSingleResult();
-            price = new SessionCategoryPrice();
-            price.setPrice(cat2);
-            price.setCategory(section);
-            price.setSession(session);
-            em.persist(price);
-            em.flush();
-            session.getPrice().add(price);
-
-            q = em.createQuery("SELECT a FROM SectionCategory a WHERE a.categoryNum=:cat3");
-            q.setParameter("cat3", catNo + 2);
-            section = (SectionCategory) q.getSingleResult();
-            price = new SessionCategoryPrice();
-            price.setPrice(cat3);
-            price.setCategory(section);
-            price.setSession(session);
-            em.persist(price);
-            em.flush();
-            session.getPrice().add(price);
         } else {
-            SessionCategoryPrice price;
-            int catNo = 1;
-            Query q = em.createQuery("SELECT a FROM SessionCategoryPrice a WHERE a.category.categoryNum=:cat1 AND a.session.id=:id");
-            q.setParameter("cat1", catNo);
-            q.setParameter("id", session.getId());
-            price = (SessionCategoryPrice) q.getSingleResult();
-            price.setPrice(cat1);
-
-            catNo = 2;
-            q = em.createQuery("SELECT a FROM SessionCategoryPrice a WHERE a.category.categoryNum=:cat2 AND a.session.id=:id");
-            q.setParameter("cat2", catNo);
-            q.setParameter("id", session.getId());
-            price = (SessionCategoryPrice) q.getSingleResult();
-            price.setPrice(cat2);
-
-            catNo = 3;
-            q = em.createQuery("SELECT a FROM SessionCategoryPrice a WHERE a.category.categoryNum=:cat3 AND a.session.id=:id");
-            q.setParameter("cat3", catNo);
-            q.setParameter("id", session.getId());
-            price = (SessionCategoryPrice) q.getSingleResult();
-            price.setPrice(cat3);
+            for (int i = 1; i <= no; i++) {
+                SessionCategoryPrice price;
+                Query q = em.createQuery("SELECT a FROM SessionCategoryPrice a WHERE a.category.categoryNum=:cat AND a.session.id=:id");
+                q.setParameter("cat", i);
+                q.setParameter("id", session.getId());
+                price = (SessionCategoryPrice) q.getSingleResult();
+                price.setPrice(cat.get(i - 1));
+            }
         }
     }
 
@@ -1001,6 +998,7 @@ public class ProductSession implements ProductSessionLocal {
         }
     }
 
+<<<<<<< HEAD
     @Override
     public ArrayList<ArrayList<String>> getPromotion() {
         Query q = em.createQuery("SELECT p FROM Promotion p");
@@ -1284,4 +1282,6 @@ public class ProductSession implements ProductSessionLocal {
         }
     }
 
+=======
+>>>>>>> refs/remotes/origin/jing-ying
 }

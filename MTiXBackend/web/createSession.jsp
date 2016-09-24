@@ -30,7 +30,7 @@
     <div class="side-body padding-top">
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     
                     <div class="header">
@@ -39,7 +39,7 @@
                     <form id="contact_form" action="${formAction}" method="POST">                        
                         <table align="center">
                             <tr>
-                                <td align="right">Sessions Date : </td>
+                                <td align="right">Sessions Date : &nbsp</td>
                                 <td align="left"><input type="text" class="form-control date" required="true" name="dates"</td>    
                             <script>
                                 $('.date').datepicker({
@@ -58,10 +58,10 @@
                         </table>
                         <table align="center">
                             <tr>
-                                <td align="right">Session Name : </td>
+                                <td align="right">Session Name : &nbsp</td>
                                 <td align="left"><input type="text" name="name" required="true" class="form-control"></td> 
                                 <td>&nbsp</td> 
-                                <td align="right">Session description : </td>
+                                <td align="right">Session description : &nbsp</td>
                                 <td align="left"><input type="text" name="description" required="true" class="form-control"</td>                 
                             </tr>
                             <tr>
@@ -71,10 +71,10 @@
                             <% int i = Integer.valueOf(data.get(2).toString()); //no
                                 for (int j = 0; j < i; j++) {%>
                             <tr id="time">
-                                <td align="right">Session<%=j + 1%> Start Time : </td>
+                                <td align="right">Session<%=j + 1%> Start Time : &nbsp</td>
                                 <td align="left"><input type="text" name="start<%=j%>" required="true" class="form-control start"</td>                 
                                 <td>&nbsp</td>     
-                                <td align="right">Session<%=j + 1%> End Time : </td>
+                                <td align="right">Session<%=j + 1%> End Time : &nbsp</td>
                                 <td align="left"><input type="text" name="end<%=j%>" required="true" class="form-control end" </td>         
                             <script>
                                 $('.start').timepicker({
