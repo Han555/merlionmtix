@@ -7,10 +7,12 @@ package entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -29,6 +31,12 @@ public class UserEntity implements Serializable {
     private boolean firstLogin;
     private boolean resetPassword;
     private ArrayList<String> roles;
+    
+    @OneToMany(mappedBy="user")
+    private Collection<SubEvent> subEvents = new ArrayList<SubEvent>();
+    
+    @OneToMany(mappedBy="user")
+    private Collection<Event> events = new ArrayList<Event>();
 
     public UserEntity() {
     }
@@ -59,6 +67,22 @@ public class UserEntity implements Serializable {
         ArrayList<String> roles = new ArrayList();
         roles.add("customer");
         this.roles = roles;
+    }
+
+    public Collection<SubEvent> getSubEvents() {
+        return subEvents;
+    }
+
+    public void setSubEvents(Collection<SubEvent> subEvents) {
+        this.subEvents = subEvents;
+    }
+
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Collection<Event> events) {
+        this.events = events;
     }
 
     public boolean isFirstLogin() {
